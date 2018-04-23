@@ -35,15 +35,15 @@ def main():
             i = i+1
         choise = input("Scegli un'opzione: ")
         if choise == '1':
-            indexDocuments()
+            index_documents()
         elif choise == '2':
             print("Scelta 2")
-            if os.path.exists(config['DATASETS_FOLDER'] + "/" + INDEX_FOLDER_NAME):
-                index = open_dir(config['DATASETS_FOLDER'] + "/" + INDEX_FOLDER_NAME)
+            if os.path.exists(INDEX_FOLDER_NAME):
+                index = open_dir(INDEX_FOLDER_NAME)
             else:
-                log.print_console ("ERROR", "Indicizza prima una collezioni documenti")
+                log.print_console("ERROR", "Indicizza prima una collezioni documenti")
         elif choise == '3':
-            shutil.rmtree(config['DATASETS_FOLDER'] + "/" + INDEX_FOLDER_NAME, ignore_errors=True)
+            shutil.rmtree(INDEX_FOLDER_NAME, ignore_errors=True)
         elif choise == '4':
             end = True
         else:
@@ -51,13 +51,13 @@ def main():
         i = 1
 
 
-def clean_xml (xml):
+def clean_xml(xml):
     xml = re.sub(r'<(/)?MedlineCitationSet>', '', xml)
     xml = "<root>" + xml + "</root>"
     return xml
 
 
-def indexDocuments():
+def index_documents():
     schema = Schema(publisher_name=TEXT, journal_title=TEXT, issn=ID, volume=NUMERIC, issue=TEXT, publish_date=DATETIME,
                     publish_season=TEXT, title=TEXT, first_page=NUMERIC, last_page=NUMERIC, language=TEXT,
                     publication_type=TEXT, publication_date_received=DATETIME, publication_date_accepted=DATETIME,
@@ -77,9 +77,9 @@ def indexDocuments():
     schema.add("group_name_*_group_component_middle_name_*", TEXT, glob=True)
     schema.add("group_name_*_group_component_suffix_*", TEXT, glob=True)
 
-    if not os.path.exists(config['DATASETS_FOLDER'] + "/" + INDEX_FOLDER_NAME):
-        os.mkdir(config['DATASETS_FOLDER'] + "/" + INDEX_FOLDER_NAME)
-    ix = create_in(config['DATASETS_FOLDER'] + "/" + INDEX_FOLDER_NAME, schema)
+    if not os.path.exists(INDEX_FOLDER_NAME):
+        os.mkdir(INDEX_FOLDER_NAME)
+    ix = create_in(INDEX_FOLDER_NAME, schema)
     writer = ix.writer()
 
     for dataset_folder in os.listdir(conf['DATASETS_FOLDER']):
@@ -93,7 +93,7 @@ def indexDocuments():
                         temp_file = documents_collection_folder + '/temp.xml'
                         with open(temp_file, 'wb') as f_out:
                             shutil.copyfileobj(f_in, f_out)
-                            xml_file = open (temp_file)
+                            xml_file = open(temp_file)
                             xml = xml_file.read()
                             xml = clean_xml(xml)
                             xml = ET.fromstring(xml)
