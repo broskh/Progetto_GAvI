@@ -46,7 +46,6 @@ def read_config():
         json_file = open(CONFIG_FILE, 'w')
         json_file.write(json.dumps(config))
     json_file.close()
-    return config
 
 
 # Export information to config file and opportunely set variables
@@ -62,7 +61,7 @@ def write_config(new_config):
 def get_config():
     if config == {}:
         read_config()
-    return config
+    return config.copy()
 
 
 # def set_log_file(log_file):

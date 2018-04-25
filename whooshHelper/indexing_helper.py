@@ -20,17 +20,16 @@ READ_BYTE_BLOCK_SIZE = 419430400  # 400MB
 END_BLOCK_FILE = b"</MedlineCitation>"
 TAG = "INDEXING"
 
-conf = {}
 
-
+# Cleans xml string and adds to it a root element to work properly
 def clean_xml(xml):
     xml = re.sub(r'<.*?MedlineCitationSet?[^>]+>', '', xml)
     xml = "<root>" + xml + "</root>"
     return xml
 
 
+# Indexes documents
 def index_documents():
-    global conf
     conf = config.get_config()
     if not os.path.exists(INDEX_FOLDER_NAME):
         os.mkdir(INDEX_FOLDER_NAME)
@@ -60,7 +59,7 @@ def index_documents():
                         temp_files = split_dataset_document(f_in, documents_collection_folder)
                         f_in.close()
                         for temp_file in temp_files:
-                            log.print_debug(TAG, "Indicizzazione del file temporaneo: '" + temp_files + "' iniziata.")
+                            log.print_debug(TAG, "Indicizzazione del file temporaneo: '" + temp_file + "' iniziata.")
                             xml_file = open(temp_file)
                             xml = xml_file.read()
                             xml_file.close()
@@ -68,7 +67,7 @@ def index_documents():
                             xml = ElementTree.fromstring(xml)
                             for medline_citation in xml.iter('MedlineCitation'):
                                 writer.update_document(**set_document_fields(medline_citation))
-                            log.print_debug(TAG, "Indicizzazione del file temporaneo: '" + temp_files + "' terminata.")
+                            log.print_debug(TAG, "Indicizzazione del file temporaneo: '" + temp_file + "' terminata.")
                         remove_files(temp_files)
                     log.print_console(TAG, "Indicizzazione del file: '" + file + "' terminata.")
             log.print_console(TAG, "Indicizzazione del dataset: '" + dataset_folder + "' terminata.")
@@ -76,6 +75,7 @@ def index_documents():
     log.print_console(TAG, "Indicizzazione terminata.")
 
 
+# Create the schema for the index
 def create_schema():
     my_analyzer = create_analyzer()
     schema = Schema(pmid=ID(unique=True, stored=True), publisher_name=TEXT(stored=True, analyzer=my_analyzer),
@@ -106,7 +106,9 @@ def create_schema():
     return schema
 
 
+# Create the analyzer for the schema
 def create_analyzer():
+    conf = config.get_config()
     if conf['STOPWORDS']:
         if conf['CHARACTERS_FOLDING']:
             if conf['STEMMING']:
@@ -164,7 +166,8 @@ def create_analyzer():
     return analyzer
 
 
-def true_month(month):
+# Converts a string consisting of three characters into its integer value
+def month_to_int(month):
     if month.lower() == "jan":
         return 1
     if month.lower() == "feb":
@@ -193,6 +196,7 @@ def true_month(month):
         return int(month)
 
 
+# Divides a large dataset document into smaller files
 def split_dataset_document(file, folder_temp):
     j = 0
     xml = file.read(1)
@@ -221,11 +225,13 @@ def split_dataset_document(file, folder_temp):
     return temp_files
 
 
+# Removes files in a list from the filesystem
 def remove_files(files):
     for file in files:
         os.remove(file)
 
 
+# Look for some specific values in the xml element and inserts them into their fields into dictionary object
 def set_document_fields(medline_citation):
     document = {}
     log.print_debug(TAG, "Ricerca dei campi nel documento iniziata.")
@@ -260,7 +266,7 @@ def set_document_fields(medline_citation):
                     year = int(pub_date_year[0].text)
                     pub_date_month = list(pub_date[0].iter('Month'))
                     if len(pub_date_month) > 0:
-                        month = int(true_month(pub_date_month[0].text))
+                        month = int(month_to_int(pub_date_month[0].text))
                         pub_date_day = list(pub_date[0].iter('Day'))
                         if len(pub_date_day) > 0:
                             day = int(pub_date_day[0].text)
@@ -337,7 +343,7 @@ def set_document_fields(medline_citation):
                         year = int(pub_date_year[0].text)
                         pub_date_month = list(pub_date.iter('Month'))
                         if len(pub_date_month) > 0:
-                            month = int(true_month(pub_date_month[0].text))
+                            month = int(month_to_int(pub_date_month[0].text))
                             pub_date_day = list(pub_date.iter('Day'))
                             if len(pub_date_day) > 0:
                                 day = int(pub_date_day[0].text)
