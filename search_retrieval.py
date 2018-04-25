@@ -2,7 +2,7 @@ import shutil
 from pathlib import Path
 import argparse
 import sys
-# import os
+import os
 
 from util import *
 from whooshHelper import *
@@ -27,25 +27,28 @@ def main():
     i = 1
     end = False
     while not end:
-        log.print_log("MENU", "Menu principale mostrato.")
+        clear_terminal()
         for voice in menu:
             print(str(i) + ") " + voice)
             i = i + 1
-        choise = input("Scegli un'opzione: ")
-        if choise == '1':
+        log.print_log("MENU", "Menu principale mostrato.")
+        value = input("Scegli un'opzione: ")
+        clear_terminal()
+        if value == '1':
             indexing_helper.index_documents()
-        elif choise == '2':
+        elif value == '2':
             print("Scelta 2")
             # if os.path.exists(indexing_helper.INDEX_FOLDER_NAME):
             #     index = open_dir(indexing_helper.INDEX_FOLDER_NAME)
             # else:
             #     log.print_console("ERROR", "Indicizza prima una collezioni documenti")
-        elif choise == '3':
+        elif value == '3':
             shutil.rmtree(indexing_helper.INDEX_FOLDER_NAME, ignore_errors=True)
-        elif choise == '4':
-            config_menu()
-            conf = config.get_config()
-        elif choise == '5':
+            log.print_log(TAG, "Index removed")
+            input("Indice dei documenti rimosso. Premi invio per continuare")
+        elif value == '4':
+            conf = config_menu()
+        elif value == '5':
             end = True
         else:
             log.print_console("ERROR", "Opzione scelta non valida")
@@ -64,52 +67,57 @@ def config_menu():
             'Modifica il limite di memoria RAM per processore (MB) utilizzata per l\'indicizzazione',
             'Modifica il numero di processori utilizzati per l\'indicizzazione',
             'Abilita/Disabilita il multisegment per l\'indicizzazione', 'Modifica il percorso del file di log',
-            'Abilita/Disabilita il debug', 'Esci senza salvare', 'Salva ed esci']
+            'Abilita/Disabilita il debug', 'Salva ed esci', 'Esci senza salvare']
     i = 1
-    log.print_log("MENU", "Menu di configurazione mostrato.")
     while True:
+        clear_terminal()
         for voice in menu:
             print(str(i) + ") " + voice)
             i = i + 1
-        choise = input("Scegli un'opzione: ")
-        if choise == '1':
+        log.print_log("MENU", "Menu di configurazione mostrato.")
+        value = input("Scegli un'opzione: ")
+        clear_terminal()
+        if value == '1':
             while True:
                 print("[Valore attuale: '" + temp_config['DATASETS_FOLDER'] + "']")
                 print("[Valore accettato: Percorso assoluto o relativo (rispetto alla cartella radice del progetto)]")
                 value = input("Immetti nuovo valore: ")
-                value = Path(value)
-                if value.is_dir():
+                if Path(value).is_dir():
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['DATASETS_FOLDER'] = value
-        elif choise == '2':
+        elif value == '2':
             while True:
                 print("[Valore attuale: '" + temp_config['DOCUMENT_COLLECTION_FOLDER_NAME'] + "']")
                 print("[Valore accettato: Nome della cartella all'interno della cartella del dataset]")
                 value = input("Immetti nuovo valore: ")
                 if isinstance(value, str):
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['DOCUMENT_COLLECTION_FOLDER_NAME'] = value
-        elif choise == '3':
+        elif value == '3':
             while True:
                 print("[Valore attuale: '" + temp_config['QRELS_FOLDER_NAME'] + "']")
                 print("[Valore accettato: Nome della cartella all'interno della cartella del dataset]")
                 value = input("Immetti nuovo valore: ")
                 if isinstance(value, str):
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['QRELS_FOLDER_NAME'] = value
-        elif choise == '4':
+        elif value == '4':
             while True:
                 print("[Valore attuale: '" + temp_config['QUERY_SET_FOLDER_NAME'] + "']")
                 print("[Valore accettato: Nome della cartella all'interno della cartella del dataset]")
                 value = input("Immetti nuovo valore: ")
                 if isinstance(value, str):
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['QUERY_SET_FOLDER_NAME'] = value
-        elif choise == '5':
+        elif value == '5':
             if temp_config['STEMMING']:
                 old_value = "Yes"
             else:
@@ -124,9 +132,10 @@ def config_menu():
                 elif value == "No" or value == "N" or value == "n":
                     value = False
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['STEMMING'] = value
-        elif choise == '6':
+        elif value == '6':
             if temp_config['STOPWORDS']:
                 old_value = "Yes"
             else:
@@ -141,10 +150,11 @@ def config_menu():
                 elif value == "No" or value == "N" or value == "n":
                     value = False
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['STOPWORDS'] = value
-        elif choise == '7':
-            if temp_config['CHARACTER_FOLDING']:
+        elif value == '7':
+            if temp_config['CHARACTERS_FOLDING']:
                 old_value = "Yes"
             else:
                 old_value = "No"
@@ -158,9 +168,10 @@ def config_menu():
                 elif value == "No" or value == "N" or value == "n":
                     value = False
                     break
-                print("Valore inserito non valido.")
-            temp_config['CHARACTER_FOLDING'] = value
-        elif choise == '8':
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
+            temp_config['CHARACTERS_FOLDING'] = value
+        elif value == '8':
             if temp_config['QGRAMS']:
                 old_value = "Yes"
             else:
@@ -175,53 +186,58 @@ def config_menu():
                 elif value == "No" or value == "N" or value == "n":
                     value = False
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['QGRAMS'] = value
-        elif choise == '9':
+        elif value == '9':
             while True:
-                print("[Valore attuale: '" + temp_config['QNUM_MIN'] + "']")
+                print("[Valore attuale: '" + str(temp_config['QNUM_MIN']) + "']")
                 print("[Valore accettato: numero intero]")
                 value = input("Immetti nuovo valore: ")
                 try:
-                    int(value)
+                    value = int(value)
                     break
                 except ValueError:
-                    print("Valore inserito non valido.")
+                    input("Valore inserito non valido. Premi invio per continuare")
+                    clear_terminal()
             temp_config['QNUM_MIN'] = value
-        elif choise == '10':
+        elif value == '10':
             while True:
-                print("[Valore attuale: '" + temp_config['QNUM_MAX'] + "']")
+                print("[Valore attuale: '" + str(temp_config['QNUM_MAX']) + "']")
                 print("[Valore accettato: numero intero]")
                 value = input("Immetti nuovo valore: ")
                 try:
-                    int(value)
+                    value = int(value)
                     break
                 except ValueError:
-                    print("Valore inserito non valido.")
+                    input("Valore inserito non valido. Premi invio per continuare")
+                    clear_terminal()
             temp_config['QNUM_MAX'] = value
-        elif choise == '11':
+        elif value == '11':
             while True:
-                print("[Valore attuale: '" + temp_config['INDEXING_RAM_LIMIT_MB_FOR_PROC'] + "']")
+                print("[Valore attuale: '" + str(temp_config['INDEXING_RAM_LIMIT_MB_FOR_PROC']) + "']")
                 print("[Valore accettato: numero intero]")
                 value = input("Immetti nuovo valore: ")
                 try:
-                    int(value)
+                    value = int(value)
                     break
                 except ValueError:
-                    print("Valore inserito non valido.")
+                    input("Valore inserito non valido. Premi invio per continuare")
+                    clear_terminal()
             temp_config['INDEXING_RAM_LIMIT_MB_FOR_PROC'] = value
-        elif choise == '12':
+        elif value == '12':
             while True:
-                print("[Valore attuale: '" + temp_config['INDEXING_PROCS_NUMBER'] + "']")
+                print("[Valore attuale: '" + str(temp_config['INDEXING_PROCS_NUMBER']) + "']")
                 print("[Valore accettato: numero intero]")
                 value = input("Immetti nuovo valore: ")
                 try:
-                    int(value)
+                    value = int(value)
                     break
                 except ValueError:
-                    print("Valore inserito non valido.")
+                    input("Valore inserito non valido. Premi invio per continuare")
+                    clear_terminal()
             temp_config['INDEXING_PROCS_NUMBER'] = value
-        elif choise == '13':
+        elif value == '13':
             if temp_config['INDEXING_MULTISEGMENT']:
                 old_value = "Yes"
             else:
@@ -236,19 +252,20 @@ def config_menu():
                 elif value == "No" or value == "N" or value == "n":
                     value = False
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['INDEXING_MULTISEGMENT'] = value
-        elif choise == '14':
+        elif value == '14':
             while True:
                 print("[Valore attuale: '" + temp_config['LOG_FILE'] + "']")
                 print("[Valore accettato: Percorso assoluto o relativo (rispetto alla cartella radice del progetto)]")
                 value = input("Immetti nuovo valore: ")
-                value = Path(value)
-                if value.is_dir():
+                if isinstance(value, str):
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['LOG_FILE'] = value
-        elif choise == '15':
+        elif value == '15':
             if temp_config['DEBUG']:
                 old_value = "Yes"
             else:
@@ -263,12 +280,13 @@ def config_menu():
                 elif value == "No" or value == "N" or value == "n":
                     value = False
                     break
-                print("Valore inserito non valido.")
+                input("Valore inserito non valido. Premi invio per continuare")
+                clear_terminal()
             temp_config['DEBUG'] = value
-        elif choise == '16':
-            break
-        elif choise == '17':
+        elif value == '16':
             config.write_config(temp_config)
+            break
+        elif value == '17':
             break
         else:
             log.print_console("ERROR", "Opzione scelta non valida")
@@ -303,8 +321,7 @@ def manage_arguments():
     new_conf = config.get_config()
     args = vars(parser.parse_args())
     if args['datasets_folder']:
-        value = Path(args['datasets_folder'])
-        if value.is_dir():
+        if Path(args['datasets_folder']).is_dir():
             new_conf['DATASETS_FOLDER'] = args['datasets_folder']
         else:
             print("dataset_folder non valido.")
@@ -345,9 +362,9 @@ def manage_arguments():
             sys.exit(1)
     if args['characters_folding']:
         if args['characters_folding'] == 'True':
-            new_conf['CHARACTER_FOLDING'] = True
+            new_conf['CHARACTERS_FOLDING'] = True
         elif args['characters_folding'] == 'False':
-            new_conf['CHARACTER_FOLDING'] = False
+            new_conf['CHARACTERS_FOLDING'] = False
         else:
             print("characters_folding non valido.")
             sys.exit(1)
@@ -410,6 +427,13 @@ def manage_arguments():
             print("debug non valido.")
             sys.exit(1)
     config.write_config(new_conf)
+
+
+def clear_terminal():
+    if os.name == 'nt':
+        os.system('cls')
+    elif os.name == 'posix':
+        os.system('clear')
 
 
 if __name__ == '__main__':

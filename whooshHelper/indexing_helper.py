@@ -21,13 +21,6 @@ END_BLOCK_FILE = b"</MedlineCitation>"
 TAG = "INDEXING"
 
 
-# Cleans xml string and adds to it a root element to work properly
-def clean_xml(xml):
-    xml = re.sub(r'<.*?MedlineCitationSet?[^>]+>', '', xml)
-    xml = "<root>" + xml + "</root>"
-    return xml
-
-
 # Indexes documents
 def index_documents():
     conf = config.get_config()
@@ -43,7 +36,6 @@ def index_documents():
         log.print_console(TAG, "Creato nuovo indice.")
     writer = ix.writer(limitmb=conf['INDEXING_RAM_LIMIT_MB_FOR_PROC'], procs=conf['INDEXING_PROCS_NUMBER'],
                        multisegment=conf['INDEXING_MULTISEGMENT'])
-    print(writer.procs)
 
     log.print_console(TAG, "Indicizzazione iniziata.")
     for dataset_folder in os.listdir(conf['DATASETS_FOLDER']):
@@ -166,36 +158,6 @@ def create_analyzer():
     return analyzer
 
 
-# Converts a string consisting of three characters into its integer value
-def month_to_int(month):
-    if month.lower() == "jan":
-        return 1
-    if month.lower() == "feb":
-        return 2
-    if month.lower() == "mar":
-        return 3
-    if month.lower() == "apr":
-        return 4
-    if month.lower() == "may":
-        return 5
-    if month.lower() == "jun":
-        return 6
-    if month.lower() == "jul":
-        return 7
-    if month.lower() == "aug":
-        return 8
-    if month.lower() == "sep":
-        return 9
-    if month.lower() == "oct":
-        return 10
-    if month.lower() == "nov":
-        return 11
-    if month.lower() == "dec":
-        return 12
-    else:
-        return int(month)
-
-
 # Divides a large dataset document into smaller files
 def split_dataset_document(file, folder_temp):
     j = 0
@@ -223,12 +185,6 @@ def split_dataset_document(file, folder_temp):
             temp_files.append(temp_file)
             xml = file.read(1)
     return temp_files
-
-
-# Removes files in a list from the filesystem
-def remove_files(files):
-    for file in files:
-        os.remove(file)
 
 
 # Look for some specific values in the xml element and inserts them into their fields into dictionary object
@@ -380,3 +336,46 @@ def set_document_fields(medline_citation):
             document['keywords'] = keywords
     log.print_debug(TAG, "Ricerca dei campi nel documento iniziata.")
     return document
+
+
+# Removes files in a list from the filesystem
+def remove_files(files):
+    for file in files:
+        os.remove(file)
+
+
+# Cleans xml string and adds to it a root element to work properly
+def clean_xml(xml):
+    xml = re.sub(r'<.*?MedlineCitationSet?[^>]+>', '', xml)
+    xml = "<root>" + xml + "</root>"
+    return xml
+
+
+# Converts a string consisting of three characters into its integer value
+def month_to_int(month):
+    if month.lower() == "jan":
+        return 1
+    if month.lower() == "feb":
+        return 2
+    if month.lower() == "mar":
+        return 3
+    if month.lower() == "apr":
+        return 4
+    if month.lower() == "may":
+        return 5
+    if month.lower() == "jun":
+        return 6
+    if month.lower() == "jul":
+        return 7
+    if month.lower() == "aug":
+        return 8
+    if month.lower() == "sep":
+        return 9
+    if month.lower() == "oct":
+        return 10
+    if month.lower() == "nov":
+        return 11
+    if month.lower() == "dec":
+        return 12
+    else:
+        return int(month)
