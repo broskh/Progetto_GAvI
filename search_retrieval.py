@@ -44,7 +44,6 @@ def main():
             shutil.rmtree(indexing_helper.INDEX_FOLDER_NAME, ignore_errors=True)
         elif choise == '4':
             config_menu()
-            global conf
             conf = config.get_config()
         elif choise == '5':
             end = True
@@ -88,8 +87,7 @@ def config_menu():
                 print("[Valore attuale: '" + temp_config['DOCUMENT_COLLECTION_FOLDER_NAME'] + "']")
                 print("[Valore accettato: Nome della cartella all'interno della cartella del dataset]")
                 value = input("Immetti nuovo valore: ")
-                value = Path(temp_config['DATASETS_FOLDER'] + "/*/" + value)
-                if value.is_dir():
+                if isinstance(value, str):
                     break
                 print("Valore inserito non valido.")
             temp_config['DOCUMENT_COLLECTION_FOLDER_NAME'] = value
@@ -98,8 +96,7 @@ def config_menu():
                 print("[Valore attuale: '" + temp_config['QRELS_FOLDER_NAME'] + "']")
                 print("[Valore accettato: Nome della cartella all'interno della cartella del dataset]")
                 value = input("Immetti nuovo valore: ")
-                value = Path(temp_config['DATASETS_FOLDER'] + "/*/" + value)
-                if value.is_dir():
+                if isinstance(value, str):
                     break
                 print("Valore inserito non valido.")
             temp_config['QRELS_FOLDER_NAME'] = value
@@ -108,8 +105,7 @@ def config_menu():
                 print("[Valore attuale: '" + temp_config['QUERY_SET_FOLDER_NAME'] + "']")
                 print("[Valore accettato: Nome della cartella all'interno della cartella del dataset]")
                 value = input("Immetti nuovo valore: ")
-                value = Path(temp_config['DATASETS_FOLDER'] + "/*/" + value)
-                if value.is_dir():
+                if isinstance(value, str):
                     break
                 print("Valore inserito non valido.")
             temp_config['QUERY_SET_FOLDER_NAME'] = value
@@ -306,105 +302,115 @@ def manage_arguments():
 
     new_conf = config.get_config()
     args = vars(parser.parse_args())
-    if args['datasets-folder']:
-        value = Path(args['datasets-folder'])
+    if args['datasets_folder']:
+        value = Path(args['datasets_folder'])
         if value.is_dir():
-            new_conf['DATASETS_FOLDER'] = args['datasets-folder']
+            new_conf['DATASETS_FOLDER'] = args['datasets_folder']
         else:
-            log.print_console(TAG, "dataset-folder non valido.")
+            print("dataset_folder non valido.")
             sys.exit(1)
-    if args['document-collection-folder-name']:
-        value = Path(new_conf['DATASETS_FOLDER'] + "/*/" + args['document-collection-folder-name'])
-        if value.is_dir():
-            new_conf['DOCUMENT_COLLECTION_FOLDER_NAME'] = args['document-collection-folder-name']
+    if args['document_collection_folder_name']:
+        if isinstance(args['document_collection_folder_name'], str):
+            new_conf['DOCUMENT_COLLECTION_FOLDER_NAME'] = args['document_collection_folder_name']
         else:
-            log.print_console(TAG, "document-collection-folder-name non valido.")
+            print("document_collection_folder_name non valido.")
             sys.exit(1)
-    if args['qrels-folder-name']:
-        value = Path(new_conf['DATASETS_FOLDER'] + "/*/" + args['qrels-folder-name'])
-        if value.is_dir():
-            new_conf['QRELS_FOLDER_NAME'] = args['qrels-folder-name']
+    if args['qrels_folder_name']:
+        if isinstance(args['qrels_folder_name'], str):
+            new_conf['QRELS_FOLDER_NAME'] = args['qrels_folder_name']
         else:
-            log.print_console(TAG, "qrels-folder-name non valido.")
+            print("qrels_folder_name non valido.")
             sys.exit(1)
-    if args['query-set-folder-name']:
-        value = Path(new_conf['DATASETS_FOLDER'] + "/*/" + args['query-set-folder-name'])
-        if value.is_dir():
-            new_conf['QUERY_SET_FOLDER_NAME'] = args['query-set-folder-name']
+    if args['query_set_folder_name']:
+        if isinstance(args['query_set_folder_name'], str):
+            new_conf['QUERY_SET_FOLDER_NAME'] = args['query_set_folder_name']
         else:
-            log.print_console(TAG, "query-set-folder-name non valido.")
+            print("query_set_folder_name non valido.")
             sys.exit(1)
     if args['stemming']:
-        if isinstance(args['stemming'], bool):
-            new_conf['STEMMING'] = args['stemming']
+        if args['stemming'] == 'True':
+            new_conf['STEMMING'] = True
+        elif args['stemming'] == 'False':
+            new_conf['STEMMING'] = False
         else:
-            log.print_console(TAG, "stemming non valido.")
+            print("stemming non valido.")
             sys.exit(1)
     if args['stopwords']:
-        if isinstance(args['stopwords'], bool):
-            new_conf['STOPWORDS'] = args['stopwords']
+        if args['stopwords'] == 'True':
+            new_conf['STOPWORDS'] = True
+        elif args['stopwords'] == 'False':
+            new_conf['STOPWORDS'] = False
         else:
-            log.print_console(TAG, "stemming non valido.")
+            print("stopwords non valido.")
             sys.exit(1)
-    if args['characters-folding']:
-        if isinstance(args['characters-folding'], bool):
-            new_conf['CHARACTERS_FOLDING'] = args['characters-folding']
+    if args['characters_folding']:
+        if args['characters_folding'] == 'True':
+            new_conf['CHARACTER_FOLDING'] = True
+        elif args['characters_folding'] == 'False':
+            new_conf['CHARACTER_FOLDING'] = False
         else:
-            log.print_console(TAG, "characters-folding non valido.")
+            print("characters_folding non valido.")
             sys.exit(1)
     if args['qgrams']:
-        if isinstance(args['qgrams'], bool):
-            new_conf['QGRAMS'] = args['qgrams']
+        if args['qgrams'] == 'True':
+            new_conf['QGRAMS'] = True
+        elif args['qgrams'] == 'False':
+            new_conf['QGRAMS'] = False
         else:
-            log.print_console(TAG, "qgrams non valido.")
+            print("qgrams non valido.")
             sys.exit(1)
-    if args['qnum-min']:
+    if args['qnum_min']:
         try:
-            value = int(args['qnum-min'])
+            value = int(args['qnum_min'])
             new_conf['QNUM_MIN'] = value
         except ValueError:
-            log.print_console(TAG, "qnum-min non valido.")
+            print("qnum_min non valido.")
             sys.exit(1)
-    if args['qnum-max']:
+    if args['qnum_max']:
         try:
-            value = int(args['qnum-max'])
+            value = int(args['qnum_max'])
             new_conf['QNUM_MAX'] = value
         except ValueError:
-            log.print_console(TAG, "qnum-max non valido.")
+            print("qnum_max non valido.")
             sys.exit(1)
-    if args['indexing-ram-limit-mb-for-proc']:
+    if args['indexing_ram_limit_mb_for_proc']:
         try:
-            value = int(args['indexing-ram-limit-mb-for-proc'])
+            value = int(args['indexing_ram_limit_mb_for_proc'])
             new_conf['INDEXING_RAM_LIMIT_MB_FOR_PROC'] = value
         except ValueError:
-            log.print_console(TAG, "indexing-ram-limit-mb-for-proc non valido.")
+            print("indexing_ram_limit_mb_for_proc non valido.")
             sys.exit(1)
-    if args['indexing-procs-number']:
+    if args['indexing_procs_number']:
         try:
-            value = int(args['indexing-procs-number'])
+            value = int(args['indexing_procs_number'])
             new_conf['INDEXING_PROCS_NUMBER'] = value
         except ValueError:
-            log.print_console(TAG, "indexing-procs-number non valido.")
+            print("indexing_procs_number non valido.")
             sys.exit(1)
-    if args['indexing-multisegment']:
-        if isinstance(args['indexing-multisegment'], bool):
-            new_conf['INDEXING_MULTISEGMENT'] = args['indexing-multisegment']
+    if args['indexing_multisegment']:
+        if args['indexing_multisegment'] == 'True':
+            new_conf['INDEXING_MULTISEGMENT'] = True
+        elif args['indexing_multisegment'] == 'False':
+            new_conf['INDEXING_MULTISEGMENT'] = False
         else:
-            log.print_console(TAG, "indexing-multisegment non valido.")
+            print("indexing_multisegment non valido.")
             sys.exit(1)
-    if args['log-file']:
-        if isinstance(args['log-file'], str):
-            new_conf['LOG_FILE'] = args['log-file']
+    if args['log_file']:
+        if isinstance(args['log_file'], str):
+            new_conf['LOG_FILE'] = args['log_file']
         else:
-            log.print_console(TAG, "log-file non valido.")
+            print("log_file non valido.")
             sys.exit(1)
     if args['debug']:
-        if isinstance(args['debug'], bool):
-            new_conf['DEBUG'] = args['debug']
+        if args['debug'] == 'True':
+            new_conf['DEBUG'] = True
+        elif args['debug'] == 'False':
+            new_conf['DEBUG'] = False
         else:
-            log.print_console(TAG, "debug non valido.")
+            print("debug non valido.")
             sys.exit(1)
-    
+    config.write_config(new_conf)
+
 
 if __name__ == '__main__':
     main()
