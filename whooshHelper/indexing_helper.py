@@ -194,7 +194,6 @@ def set_document_fields(medline_citation):
     pmid = list(medline_citation.findall("PMID"))
     if len(pmid) > 0:
         document['pmid'] = pmid[0].text
-        print(document['pmid'])
     article = list(medline_citation.iter('Article'))
     if len(article) > 0:
         article = article[0]
