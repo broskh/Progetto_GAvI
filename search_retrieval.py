@@ -1,23 +1,20 @@
-import os
 import shutil
-import gzip
-import re
-import xml.etree.ElementTree as ET
+from pathlib import Path
+import argparse
+import sys
+# import os
 
 from util import *
+from whooshHelper import *
 
-from whoosh.index import create_in
-from whoosh.fields import *
-from whoosh.index import open_dir
-from whoosh.qparser import QueryParser
+# from whoosh.index import open_dir
 
-INDEX_FOLDER_NAME = "index"
-conf = {}
+TAG = "MAIN"
 
 
 def main():
-    global conf
-    conf = config.read_config()
+    manage_arguments()
+    conf = config.get_config()
     log.set_log_file(conf['LOG_FILE'])
     if conf['DEBUG']:
         log.enable_debug()
@@ -25,249 +22,389 @@ def main():
         log.disable_debug()
     log.print_log("-------", "-------")
     log.print_log("START", "")
-    menu = ['Indicizza i documenti', 'Esegui query', 'Rimuovi i documenti indicizzati', 'Esci']
+    menu = ['Indicizza i documenti', 'Esegui query', 'Rimuovi i documenti indicizzati',
+            'Modificare la configurazione', 'Esci']
     i = 1
     end = False
     while not end:
-        log.print_log("MENU", "Menu mostrato")
+        log.print_log("MENU", "Menu principale mostrato.")
         for voice in menu:
             print(str(i) + ") " + voice)
-            i = i+1
+            i = i + 1
         choise = input("Scegli un'opzione: ")
         if choise == '1':
-            index_documents()
+            indexing_helper.index_documents()
         elif choise == '2':
             print("Scelta 2")
-            if os.path.exists(INDEX_FOLDER_NAME):
-                index = open_dir(INDEX_FOLDER_NAME)
-            else:
-                log.print_console("ERROR", "Indicizza prima una collezioni documenti")
+            # if os.path.exists(indexing_helper.INDEX_FOLDER_NAME):
+            #     index = open_dir(indexing_helper.INDEX_FOLDER_NAME)
+            # else:
+            #     log.print_console("ERROR", "Indicizza prima una collezioni documenti")
         elif choise == '3':
-            shutil.rmtree(INDEX_FOLDER_NAME, ignore_errors=True)
+            shutil.rmtree(indexing_helper.INDEX_FOLDER_NAME, ignore_errors=True)
         elif choise == '4':
+            config_menu()
+            global conf
+            conf = config.get_config()
+        elif choise == '5':
             end = True
         else:
             log.print_console("ERROR", "Opzione scelta non valida")
         i = 1
 
 
-def clean_xml(xml):
-    xml = re.sub(r'<(/)?MedlineCitationSet>', '', xml)
-    xml = "<root>" + xml + "</root>"
-    return xml
+def config_menu():
+    temp_config = config.get_config()
+    menu = ['Modifica il percorso cartella dei datasets',
+            'Modifica il nome della cartella contenente la collezione di documenti dei dataset',
+            'Modifica il nome della cartella contenente i qrels dei dataset',
+            'Modifica il nome della cartella contenente le query dei dataset', 'Abilita/Disabilita lo stemming',
+            'Abilita/Disabilita la rimozione di stopwords', 'Abilita/Disabilita l\'accent folding',
+            'Abilita/Disabilita la scomposizione in q-grams', 'Modifica la dimensione minima dei q-grams',
+            'Modifica la dimensione massima dei q-grams',
+            'Modifica il limite di memoria RAM per processore (MB) utilizzata per l\'indicizzazione',
+            'Modifica il numero di processori utilizzati per l\'indicizzazione',
+            'Abilita/Disabilita il multisegment per l\'indicizzazione', 'Modifica il percorso del file di log',
+            'Abilita/Disabilita il debug', 'Esci senza salvare', 'Salva ed esci']
+    i = 1
+    log.print_log("MENU", "Menu di configurazione mostrato.")
+    while True:
+        for voice in menu:
+            print(str(i) + ") " + voice)
+            i = i + 1
+        choise = input("Scegli un'opzione: ")
+        if choise == '1':
+            while True:
+                print("[Valore attuale: '" + temp_config['DATASETS_FOLDER'] + "']")
+                print("[Valore accettato: Percorso assoluto o relativo (rispetto alla cartella radice del progetto)]")
+                value = input("Immetti nuovo valore: ")
+                value = Path(value)
+                if value.is_dir():
+                    break
+                print("Valore inserito non valido.")
+            temp_config['DATASETS_FOLDER'] = value
+        elif choise == '2':
+            while True:
+                print("[Valore attuale: '" + temp_config['DOCUMENT_COLLECTION_FOLDER_NAME'] + "']")
+                print("[Valore accettato: Nome della cartella all'interno della cartella del dataset]")
+                value = input("Immetti nuovo valore: ")
+                value = Path(temp_config['DATASETS_FOLDER'] + "/*/" + value)
+                if value.is_dir():
+                    break
+                print("Valore inserito non valido.")
+            temp_config['DOCUMENT_COLLECTION_FOLDER_NAME'] = value
+        elif choise == '3':
+            while True:
+                print("[Valore attuale: '" + temp_config['QRELS_FOLDER_NAME'] + "']")
+                print("[Valore accettato: Nome della cartella all'interno della cartella del dataset]")
+                value = input("Immetti nuovo valore: ")
+                value = Path(temp_config['DATASETS_FOLDER'] + "/*/" + value)
+                if value.is_dir():
+                    break
+                print("Valore inserito non valido.")
+            temp_config['QRELS_FOLDER_NAME'] = value
+        elif choise == '4':
+            while True:
+                print("[Valore attuale: '" + temp_config['QUERY_SET_FOLDER_NAME'] + "']")
+                print("[Valore accettato: Nome della cartella all'interno della cartella del dataset]")
+                value = input("Immetti nuovo valore: ")
+                value = Path(temp_config['DATASETS_FOLDER'] + "/*/" + value)
+                if value.is_dir():
+                    break
+                print("Valore inserito non valido.")
+            temp_config['QUERY_SET_FOLDER_NAME'] = value
+        elif choise == '5':
+            if temp_config['STEMMING']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Valore attuale: '" + old_value + "']")
+                print("[Valore accettato: 'Yes' or 'No']")
+                value = input("Immetti nuovo valore: ")
+                if value == "Yes" or value == "Y" or value == "y":
+                    value = True
+                    break
+                elif value == "No" or value == "N" or value == "n":
+                    value = False
+                    break
+                print("Valore inserito non valido.")
+            temp_config['STEMMING'] = value
+        elif choise == '6':
+            if temp_config['STOPWORDS']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Valore attuale: '" + old_value + "']")
+                print("[Valore accettato: 'Yes' or 'No']")
+                value = input("Immetti nuovo valore: ")
+                if value == "Yes" or value == "Y" or value == "y":
+                    value = True
+                    break
+                elif value == "No" or value == "N" or value == "n":
+                    value = False
+                    break
+                print("Valore inserito non valido.")
+            temp_config['STOPWORDS'] = value
+        elif choise == '7':
+            if temp_config['CHARACTER_FOLDING']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Valore attuale: '" + old_value + "']")
+                print("[Valore accettato: 'Yes' or 'No']")
+                value = input("Immetti nuovo valore: ")
+                if value == "Yes" or value == "Y" or value == "y":
+                    value = True
+                    break
+                elif value == "No" or value == "N" or value == "n":
+                    value = False
+                    break
+                print("Valore inserito non valido.")
+            temp_config['CHARACTER_FOLDING'] = value
+        elif choise == '8':
+            if temp_config['QGRAMS']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Valore attuale: '" + old_value + "']")
+                print("[Valore accettato: 'Yes' or 'No']")
+                value = input("Immetti nuovo valore: ")
+                if value == "Yes" or value == "Y" or value == "y":
+                    value = True
+                    break
+                elif value == "No" or value == "N" or value == "n":
+                    value = False
+                    break
+                print("Valore inserito non valido.")
+            temp_config['QGRAMS'] = value
+        elif choise == '9':
+            while True:
+                print("[Valore attuale: '" + temp_config['QNUM_MIN'] + "']")
+                print("[Valore accettato: numero intero]")
+                value = input("Immetti nuovo valore: ")
+                try:
+                    int(value)
+                    break
+                except ValueError:
+                    print("Valore inserito non valido.")
+            temp_config['QNUM_MIN'] = value
+        elif choise == '10':
+            while True:
+                print("[Valore attuale: '" + temp_config['QNUM_MAX'] + "']")
+                print("[Valore accettato: numero intero]")
+                value = input("Immetti nuovo valore: ")
+                try:
+                    int(value)
+                    break
+                except ValueError:
+                    print("Valore inserito non valido.")
+            temp_config['QNUM_MAX'] = value
+        elif choise == '11':
+            while True:
+                print("[Valore attuale: '" + temp_config['INDEXING_RAM_LIMIT_MB_FOR_PROC'] + "']")
+                print("[Valore accettato: numero intero]")
+                value = input("Immetti nuovo valore: ")
+                try:
+                    int(value)
+                    break
+                except ValueError:
+                    print("Valore inserito non valido.")
+            temp_config['INDEXING_RAM_LIMIT_MB_FOR_PROC'] = value
+        elif choise == '12':
+            while True:
+                print("[Valore attuale: '" + temp_config['INDEXING_PROCS_NUMBER'] + "']")
+                print("[Valore accettato: numero intero]")
+                value = input("Immetti nuovo valore: ")
+                try:
+                    int(value)
+                    break
+                except ValueError:
+                    print("Valore inserito non valido.")
+            temp_config['INDEXING_PROCS_NUMBER'] = value
+        elif choise == '13':
+            if temp_config['INDEXING_MULTISEGMENT']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Valore attuale: '" + old_value + "']")
+                print("[Valore accettato: 'Yes' or 'No']")
+                value = input("Immetti nuovo valore: ")
+                if value == "Yes" or value == "Y" or value == "y":
+                    value = True
+                    break
+                elif value == "No" or value == "N" or value == "n":
+                    value = False
+                    break
+                print("Valore inserito non valido.")
+            temp_config['INDEXING_MULTISEGMENT'] = value
+        elif choise == '14':
+            while True:
+                print("[Valore attuale: '" + temp_config['LOG_FILE'] + "']")
+                print("[Valore accettato: Percorso assoluto o relativo (rispetto alla cartella radice del progetto)]")
+                value = input("Immetti nuovo valore: ")
+                value = Path(value)
+                if value.is_dir():
+                    break
+                print("Valore inserito non valido.")
+            temp_config['LOG_FILE'] = value
+        elif choise == '15':
+            if temp_config['DEBUG']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Valore attuale: '" + old_value + "']")
+                print("[Valore accettato: 'Yes' or 'No']")
+                value = input("Immetti nuovo valore: ")
+                if value == "Yes" or value == "Y" or value == "y":
+                    value = True
+                    break
+                elif value == "No" or value == "N" or value == "n":
+                    value = False
+                    break
+                print("Valore inserito non valido.")
+            temp_config['DEBUG'] = value
+        elif choise == '16':
+            break
+        elif choise == '17':
+            config.write_config(temp_config)
+            break
+        else:
+            log.print_console("ERROR", "Opzione scelta non valida")
+        i = 1
+    return config.get_config()
 
 
-def index_documents():
-    schema = Schema(publisher_name=TEXT, journal_title=TEXT, issn=ID, volume=NUMERIC, issue=TEXT, publish_date=DATETIME,
-                    publish_season=TEXT, title=TEXT, first_page=NUMERIC, last_page=NUMERIC, language=TEXT,
-                    publication_type=TEXT, publication_date_received=DATETIME, publication_date_accepted=DATETIME,
-                    publication_date_revised=DATETIME, publication_date_aheadofprint=DATETIME,
-                    publication_date_epublish=DATETIME, publication_date_ppublish=DATETIME,
-                    publication_date_ecollection=DATETIME, content=TEXT, copyright=TEXT, coi_statment=TEXT,
-                    keywords=KEYWORD)  # (stored=True)
-    schema.add("author_first_name_*", TEXT, glob=True)
-    schema.add("author_last_name_*", TEXT, glob=True)
-    schema.add("author_middle_name_*", TEXT, glob=True)
-    schema.add("author_suffix_*", TEXT, glob=True)
-    schema.add("author_collective_name_*", TEXT, glob=True)
-    schema.add("author_affiliation_*", TEXT, glob=True)
-    schema.add("group_name_*", TEXT, glob=True)
-    schema.add("group_name_*_group_component_first_name_*", TEXT, glob=True)
-    schema.add("group_name_*_group_component_last_name_*", TEXT, glob=True)
-    schema.add("group_name_*_group_component_middle_name_*", TEXT, glob=True)
-    schema.add("group_name_*_group_component_suffix_*", TEXT, glob=True)
+def manage_arguments():
+    # Parse arguments.
+    parser = argparse.ArgumentParser(description='Software per effettuare information retrieval')
 
-    if not os.path.exists(INDEX_FOLDER_NAME):
-        os.mkdir(INDEX_FOLDER_NAME)
-    ix = create_in(INDEX_FOLDER_NAME, schema)
-    writer = ix.writer()
+    parser.add_argument('--datasets-folder', help="Modifica il percorso cartella dei datasets")
+    parser.add_argument('--document-collection-folder-name',
+                        help="Modifica il nome della cartella contenente la collezione di documenti dei dataset")
+    parser.add_argument('--qrels-folder-name', help="Modifica il nome della cartella contenente i qrels dei dataset")
+    parser.add_argument('--query-set-folder-name',
+                        help="Modifica il nome della cartella contenente le query dei dataset")
+    parser.add_argument('--stemming', help="Abilita/Disabilita lo stemming")
+    parser.add_argument('--stopwords', help="Abilita/Disabilita la rimozione di stopwords")
+    parser.add_argument('--characters-folding', help="Abilita/Disabilita l'accent folding")
+    parser.add_argument('--qgrams', help="Abilita/Disabilita la scomposizione in q-grams")
+    parser.add_argument('--qnum-min', help="Modifica la dimensione minima dei q-grams")
+    parser.add_argument('--qnum-max', help="Modifica la dimensione massima dei q-grams")
+    parser.add_argument('--indexing-ram-limit-mb-for-proc',
+                        help="Modifica il limite di memoria RAM per processore (MB) utilizzata per l'indicizzazione")
+    parser.add_argument('--indexing-procs-number',
+                        help="Modifica il numero di processori utilizzati per l'indicizzazione")
+    parser.add_argument('--indexing-multisegment', help="Abilita/Disabilita il multisegment per l'indicizzazione")
+    parser.add_argument('--log-file', help="Modifica il percorso del file di log")
+    parser.add_argument('--debug', help="Abilita/Disabilita il debug")
 
-    for dataset_folder in os.listdir(conf['DATASETS_FOLDER']):
-        dataset_folder = conf['DATASETS_FOLDER'] + '/' + dataset_folder
-        if os.path.isdir(dataset_folder):
-            documents_collection_folder = dataset_folder + '/' + conf['DOCUMENT_COLLECTION_FOLDER_NAME']
-            for file in os.listdir(documents_collection_folder):
-                if file.endswith(".gz"):
-                    file = documents_collection_folder + '/' + file
-                    with gzip.open(file, 'rb') as f_in:
-                        temp_file = documents_collection_folder + '/temp.xml'
-                        with open(temp_file, 'wb') as f_out:
-                            shutil.copyfileobj(f_in, f_out)
-                            xml_file = open(temp_file)
-                            xml = xml_file.read()
-                            xml = clean_xml(xml)
-                            xml = ET.fromstring(xml)
-                            for article in xml.iter('Article'):
-                                document = {}
-                                publisher_name = list(article.iter('PublisherName'))
-                                if len(publisher_name) > 0:
-                                    document['publisher_name'] = publisher_name[0].text
-                                journal_title = list(article.iter('JournalTitle'))
-                                if len(journal_title) > 0:
-                                    document['journal_title'] = journal_title[0].text
-                                issn = list(article.iter('ISSN'))
-                                if len(issn) > 0:
-                                    document['issn'] = issn[0].text
-                                volume = list(article.iter('Volume'))
-                                if len(volume) > 0:
-                                    document['volume'] = volume[0].text
-                                issue = list(article.iter('Issue'))
-                                if len(issue) > 0:
-                                    document['issue'] = issue[0].text
-                                journal = list(article.iter('Journal'))
-                                if len(journal) > 0:
-                                    pub_date = list(journal[0].iter('PubDate'))
-                                    if len(pub_date) > 0:
-                                        pub_date_year = list(pub_date[0].iter('Year'))
-                                        if len(pub_date_year) > 0:
-                                            year = int(pub_date_year[0].text)
-                                            pub_date_month = list(pub_date[0].iter('Month'))
-                                            if len(pub_date_month) > 0:
-                                                month = int(true_month(pub_date_month[0].text))
-                                                pub_date_day = list(pub_date[0].iter('Day'))
-                                                if len(pub_date_day) > 0:
-                                                    day = int(pub_date_day[0].text)
-                                                    publish_date = datetime.datetime(year, month, day)
-                                                    document['publish_date'] = publish_date
-                                publish_season = list(article.iter('Season'))
-                                if len(publish_season) > 0:
-                                    document['publish_season'] = publish_season[0].text
-                                title = list(article.iter('ArticleTitle'))
-                                if len(title) > 0:
-                                    document['title'] = title[0].text
-                                first_page = list(article.iter('FirstPage'))
-                                if len(first_page) > 0:
-                                    document['first_page'] = first_page[0].text
-                                last_page = list(article.iter('LastPage'))
-                                if len(last_page) > 0:
-                                    document['last_page'] = last_page[0].text
-                                language = list(article.iter('Language'))
-                                if len(language) > 0:
-                                    document['language'] = language[0].text
-                                i = 1
-                                for author in article.iter('Author'):
-                                    first_name = list(author.iter('FirstName'))
-                                    if len(first_name) > 0:
-                                        document['author_first_name_'+str(i)] = first_name[0].text
-                                    last_name = list(author.iter('LastName'))
-                                    if len(last_name) > 0:
-                                        document['author_last_name_'+str(i)] = last_name[0].text
-                                    middle_name = list(author.iter('MiddleName'))
-                                    if len(middle_name) > 0:
-                                        document['author_first_name_'+str(i)] = first_name[0].text
-                                    suffix = list(author.iter('Suffix'))
-                                    if len(suffix) > 0:
-                                        document['author_suffix_'+str(i)] = suffix[0].text
-                                    collective_name = list(author.iter('CollectiveName'))
-                                    if len(collective_name) > 0:
-                                        document['author_collective_name_'+str(i)] = collective_name[0].text
-                                    affiliation = list(author.iter('Affiliation'))
-                                    if len(affiliation) > 0:
-                                        document['author_affiliation_'+str(i)] = affiliation[0].text
-                                    i = i+1
-                                i = 1
-                                for group in article.iter('Group'):
-                                    document['group_name_'+str(i)] = group.find('GroupName').text
-                                    k = 0
-                                    for group_component in group.iter('IndividualName'):
-                                        group_component_first_name = list(group_component.iter('FirstName'))
-                                        if len(group_component_first_name) > 0:
-                                            key = 'group_name_'+str(i)+'_group_component_first_name_'+str(k)
-                                            document[key] = group_component_first_name[0].text
-                                        group_component_last_name = list(group_component.iter('LastName'))
-                                        if len(group_component_last_name) > 0:
-                                            key = 'group_name_'+str(i)+'_group_component_last_name_'+str(k)
-                                            document[key] = group_component_last_name[0].text
-                                        group_component_middle_name = list(group_component.iter('MiddleName'))
-                                        if len(group_component_middle_name) > 0:
-                                            key = 'group_name_'+str(i)+'_group_component_middle_name_'+str(k)
-                                            document[key] = group_component_middle_name[0].text
-                                        group_component_suffix = list(group_component.iter('Suffix'))
-                                        if len(group_component_suffix) > 0:
-                                            key = 'group_name_'+str(i)+'_group_component_suffix_'+str(k)
-                                            document[key] = group_component_suffix[0].text
-                                        k = k+1
-                                    i = i+1
-                                publication_type = list(article.iter('PublicationType'))
-                                if len(publication_type) > 0:
-                                    document['publication_type'] = publication_type[0].text
-                                history = list(article.iter('History'))
-                                if len(history) > 0:
-                                    for pub_date in history[0].iter('PubDate'):
-                                        if len(list(pub_date)) > 0:
-                                            pub_date_year = list(pub_date.iter('Year'))
-                                            if len(pub_date_year) > 0:
-                                                year = int(pub_date_year[0].text)
-                                                pub_date_month = list(pub_date.iter('Month'))
-                                                if len(pub_date_month) > 0:
-                                                    month = int(true_month(pub_date_month[0].text))
-                                                    pub_date_day = list(pub_date.iter('Day'))
-                                                    if len(pub_date_day) > 0:
-                                                        day = int(pub_date_day[0].text)
-                                                        publish_date = datetime.datetime(year, month, day)
-                                                        if pub_date.attrib['PubStatus'] == 'received':
-                                                            document['publication_date_received'] = publish_date
-                                                        elif pub_date.attrib['PubStatus'] == 'accepted':
-                                                            document['publication_date_accepted'] = publish_date
-                                                        elif pub_date.attrib['PubStatus'] == 'revised':
-                                                            document['publication_date_revised'] = publish_date
-                                                        elif pub_date.attrib['PubStatus'] == 'aheadofprint':
-                                                            document['publication_date_aheadofprint'] = publish_date
-                                                        elif pub_date.attrib['PubStatus'] == 'eepublish':
-                                                            document['publication_date_eepublish'] = publish_date
-                                                        elif pub_date.attrib['PubStatus'] == 'ppublish':
-                                                            document['publication_date_ppublish'] = publish_date
-                                                        elif pub_date.attrib['PubStatus'] == 'ecollection':
-                                                            document['publication_date_ecollection'] = publish_date
-                                content = list(article.iter('AbstractText'))
-                                if len(content) > 0:
-                                    document['content'] = content[0].text
-                                copyright = list(article.iter('CopyrightInformation'))
-                                if copyright:
-                                    document['copyright'] = copyright[0].text
-                                coi_statment = list(article.iter('CoiStatement'))
-                                if coi_statment:
-                                    document['coi_statment'] = coi_statment[0].text
-                                keywords = ""
-                                for object in article.iter('Object'):
-                                    if object.attrib['Type'] == 'keyword':
-                                        keywords = keywords + object.findall('Param')[0].text + ","
-                                if keywords != "":
-                                    keywords = keywords[:-1]
-                                    document['keywords'] = keywords
-                                writer.add_document(**document)
-                            os.remove(temp_file)
-    writer.commit()
-
-
-def true_month (month):
-    if month.lower() == "jan":
-        return 1
-    if month.lower() == "feb":
-        return 2
-    if month.lower() == "mar":
-        return 3
-    if month.lower() == "apr":
-        return 4
-    if month.lower() == "may":
-        return 5
-    if month.lower() == "jun":
-        return 6
-    if month.lower() == "jul":
-        return 7
-    if month.lower() == "aug":
-        return 8
-    if month.lower() == "sep":
-        return 9
-    if month.lower() == "oct":
-        return 10
-    if month.lower() == "nov":
-        return 11
-    if month.lower() == "dec":
-        return 12
-    else:
-        return int(month)
-
+    new_conf = config.get_config()
+    args = vars(parser.parse_args())
+    if args['datasets-folder']:
+        value = Path(args['datasets-folder'])
+        if value.is_dir():
+            new_conf['DATASETS_FOLDER'] = args['datasets-folder']
+        else:
+            log.print_console(TAG, "dataset-folder non valido.")
+            sys.exit(1)
+    if args['document-collection-folder-name']:
+        value = Path(new_conf['DATASETS_FOLDER'] + "/*/" + args['document-collection-folder-name'])
+        if value.is_dir():
+            new_conf['DOCUMENT_COLLECTION_FOLDER_NAME'] = args['document-collection-folder-name']
+        else:
+            log.print_console(TAG, "document-collection-folder-name non valido.")
+            sys.exit(1)
+    if args['qrels-folder-name']:
+        value = Path(new_conf['DATASETS_FOLDER'] + "/*/" + args['qrels-folder-name'])
+        if value.is_dir():
+            new_conf['QRELS_FOLDER_NAME'] = args['qrels-folder-name']
+        else:
+            log.print_console(TAG, "qrels-folder-name non valido.")
+            sys.exit(1)
+    if args['query-set-folder-name']:
+        value = Path(new_conf['DATASETS_FOLDER'] + "/*/" + args['query-set-folder-name'])
+        if value.is_dir():
+            new_conf['QUERY_SET_FOLDER_NAME'] = args['query-set-folder-name']
+        else:
+            log.print_console(TAG, "query-set-folder-name non valido.")
+            sys.exit(1)
+    if args['stemming']:
+        if isinstance(args['stemming'], bool):
+            new_conf['STEMMING'] = args['stemming']
+        else:
+            log.print_console(TAG, "stemming non valido.")
+            sys.exit(1)
+    if args['stopwords']:
+        if isinstance(args['stopwords'], bool):
+            new_conf['STOPWORDS'] = args['stopwords']
+        else:
+            log.print_console(TAG, "stemming non valido.")
+            sys.exit(1)
+    if args['characters-folding']:
+        if isinstance(args['characters-folding'], bool):
+            new_conf['CHARACTERS_FOLDING'] = args['characters-folding']
+        else:
+            log.print_console(TAG, "characters-folding non valido.")
+            sys.exit(1)
+    if args['qgrams']:
+        if isinstance(args['qgrams'], bool):
+            new_conf['QGRAMS'] = args['qgrams']
+        else:
+            log.print_console(TAG, "qgrams non valido.")
+            sys.exit(1)
+    if args['qnum-min']:
+        try:
+            value = int(args['qnum-min'])
+            new_conf['QNUM_MIN'] = value
+        except ValueError:
+            log.print_console(TAG, "qnum-min non valido.")
+            sys.exit(1)
+    if args['qnum-max']:
+        try:
+            value = int(args['qnum-max'])
+            new_conf['QNUM_MAX'] = value
+        except ValueError:
+            log.print_console(TAG, "qnum-max non valido.")
+            sys.exit(1)
+    if args['indexing-ram-limit-mb-for-proc']:
+        try:
+            value = int(args['indexing-ram-limit-mb-for-proc'])
+            new_conf['INDEXING_RAM_LIMIT_MB_FOR_PROC'] = value
+        except ValueError:
+            log.print_console(TAG, "indexing-ram-limit-mb-for-proc non valido.")
+            sys.exit(1)
+    if args['indexing-procs-number']:
+        try:
+            value = int(args['indexing-procs-number'])
+            new_conf['INDEXING_PROCS_NUMBER'] = value
+        except ValueError:
+            log.print_console(TAG, "indexing-procs-number non valido.")
+            sys.exit(1)
+    if args['indexing-multisegment']:
+        if isinstance(args['indexing-multisegment'], bool):
+            new_conf['INDEXING_MULTISEGMENT'] = args['indexing-multisegment']
+        else:
+            log.print_console(TAG, "indexing-multisegment non valido.")
+            sys.exit(1)
+    if args['log-file']:
+        if isinstance(args['log-file'], str):
+            new_conf['LOG_FILE'] = args['log-file']
+        else:
+            log.print_console(TAG, "log-file non valido.")
+            sys.exit(1)
+    if args['debug']:
+        if isinstance(args['debug'], bool):
+            new_conf['DEBUG'] = args['debug']
+        else:
+            log.print_console(TAG, "debug non valido.")
+            sys.exit(1)
+    
 
 if __name__ == '__main__':
     main()
