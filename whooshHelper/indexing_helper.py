@@ -1,5 +1,6 @@
 import gzip
 import os
+import time
 import xml.etree.ElementTree as ElementTree
 
 from whoosh.analysis import StopFilter
@@ -48,18 +49,29 @@ def index_documents():
                     file = documents_collection_folder + '/' + file
                     log.print_console(TAG, "Indicizzazione del file: '" + file + "' iniziata.")
                     with gzip.open(file, 'rb') as f_in:
+                        time_start = time.time()
                         temp_files = split_dataset_document(f_in, documents_collection_folder)
+                        log.print_debug(TAG, "Tempo di split: " + str(time.time() - time_start) + " sec")
                         f_in.close()
+                        time_temps = time.time()
                         for temp_file in temp_files:
                             log.print_debug(TAG, "Indicizzazione del file temporaneo: '" + temp_file + "' iniziata.")
+                            time_start = time.time()
                             xml_file = open(temp_file)
+                            log.print_debug(TAG, "Tempo di apertura xml: " + str(time.time() - time_start) + " sec")
+                            time_start = time.time()
                             xml = xml_file.read()
+                            log.print_debug(TAG, "Tempo di lettura xml: " + str(time.time() - time_start) + " sec")
                             xml_file.close()
+                            time_start = time.time()
                             xml = clean_xml(xml)
+                            log.print_debug(TAG, "Tempo di pulizia xml: " + str(time.time() - time_start) + " sec")
                             xml = ElementTree.fromstring(xml)
                             for medline_citation in xml.iter('MedlineCitation'):
                                 writer.update_document(**set_document_fields(medline_citation))
                             log.print_debug(TAG, "Indicizzazione del file temporaneo: '" + temp_file + "' terminata.")
+                        log.print_debug(TAG, "Tempo di indicizzazione di tutti i file temp: " +
+                                        str(time.time() - time_temps) + " sec")
                         remove_files(temp_files)
                     log.print_console(TAG, "Indicizzazione del file: '" + file + "' terminata.")
             log.print_console(TAG, "Indicizzazione del dataset: '" + dataset_folder + "' terminata.")
@@ -225,8 +237,11 @@ def set_document_fields(medline_citation):
                         pub_date_day = list(pub_date[0].iter('Day'))
                         if len(pub_date_day) > 0:
                             day = int(pub_date_day[0].text)
-                            publish_date = datetime.datetime(year, month, day)
-                            document['publish_date'] = publish_date
+                            try:
+                                publish_date = datetime.datetime(year, month, day)
+                                document['publish_date'] = publish_date
+                            except ValueError:
+                                log.print_debug(TAG, "Data errata.")
         publish_season = list(article.iter('Season'))
         if len(publish_season) > 0:
             document['publish_season'] = publish_season[0].text
@@ -302,21 +317,24 @@ def set_document_fields(medline_citation):
                             pub_date_day = list(pub_date.iter('Day'))
                             if len(pub_date_day) > 0:
                                 day = int(pub_date_day[0].text)
-                                publish_date = datetime.datetime(year, month, day)
-                                if pub_date.attrib['PubStatus'] == 'received':
-                                    document['publication_date_received'] = publish_date
-                                elif pub_date.attrib['PubStatus'] == 'accepted':
-                                    document['publication_date_accepted'] = publish_date
-                                elif pub_date.attrib['PubStatus'] == 'revised':
-                                    document['publication_date_revised'] = publish_date
-                                elif pub_date.attrib['PubStatus'] == 'aheadofprint':
-                                    document['publication_date_aheadofprint'] = publish_date
-                                elif pub_date.attrib['PubStatus'] == 'eepublish':
-                                    document['publication_date_eepublish'] = publish_date
-                                elif pub_date.attrib['PubStatus'] == 'ppublish':
-                                    document['publication_date_ppublish'] = publish_date
-                                elif pub_date.attrib['PubStatus'] == 'ecollection':
-                                    document['publication_date_ecollection'] = publish_date
+                                try:
+                                    publish_date = datetime.datetime(year, month, day)
+                                    if pub_date.attrib['PubStatus'] == 'received':
+                                        document['publication_date_received'] = publish_date
+                                    elif pub_date.attrib['PubStatus'] == 'accepted':
+                                        document['publication_date_accepted'] = publish_date
+                                    elif pub_date.attrib['PubStatus'] == 'revised':
+                                        document['publication_date_revised'] = publish_date
+                                    elif pub_date.attrib['PubStatus'] == 'aheadofprint':
+                                        document['publication_date_aheadofprint'] = publish_date
+                                    elif pub_date.attrib['PubStatus'] == 'eepublish':
+                                        document['publication_date_eepublish'] = publish_date
+                                    elif pub_date.attrib['PubStatus'] == 'ppublish':
+                                        document['publication_date_ppublish'] = publish_date
+                                    elif pub_date.attrib['PubStatus'] == 'ecollection':
+                                        document['publication_date_ecollection'] = publish_date
+                                except ValueError:
+                                    log.print_debug(TAG, "Data errata.")
         content = list(article.iter('AbstractText'))
         if len(content) > 0:
             document['content'] = content[0].text
@@ -333,7 +351,7 @@ def set_document_fields(medline_citation):
         if keywords != "":
             keywords = keywords[:-1]
             document['keywords'] = keywords
-    log.print_debug(TAG, "Ricerca dei campi nel documento iniziata.")
+    log.print_debug(TAG, "Ricerca dei campi nel documento " + document['pmid'] + " terminata.")
     return document
 
 

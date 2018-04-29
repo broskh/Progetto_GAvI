@@ -43,8 +43,8 @@ def main():
             # else:
             #     log.print_console("ERROR", "Indicizza prima una collezioni documenti")
         elif value == '3':
+            log.print_console(TAG, "Rimozione dell'indice in corso")
             shutil.rmtree(indexing_helper.INDEX_FOLDER_NAME, ignore_errors=True)
-            log.print_log(TAG, "Index removed")
             input("Indice dei documenti rimosso. Premi invio per continuare")
         elif value == '4':
             conf = config_menu()
