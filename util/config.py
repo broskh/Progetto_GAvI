@@ -21,7 +21,7 @@ CONFIG_FILE = "config.json"
 config = {}
 
 
-# Import imformation from config file and opportunely set variables
+# Import information from config file and opportunely set variables
 def read_config():
     global config
     if os.path.isfile(CONFIG_FILE):

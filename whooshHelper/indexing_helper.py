@@ -85,7 +85,7 @@ def create_schema():
     schema = Schema(pmid=ID(unique=True, stored=True), publisher_name=TEXT(stored=True, analyzer=my_analyzer),
                     journal_title=TEXT(stored=True, analyzer=my_analyzer), issn=ID(stored=True),
                     volume=TEXT(stored=True, analyzer=my_analyzer), issue=TEXT(stored=True, analyzer=my_analyzer),
-                    publish_date=DATETIME(stored=True), publish_season=TEXT(stored=True, analyzer=my_analyzer),
+                    publish_date=DATETIME(stored=True, sortable=True), publish_season=TEXT(stored=True, analyzer=my_analyzer),
                     title=TEXT(stored=True, analyzer=my_analyzer), first_page=NUMERIC(stored=True),
                     last_page=NUMERIC(stored=True), language=TEXT(stored=True, analyzer=my_analyzer),
                     publication_type=TEXT(stored=True, analyzer=my_analyzer),

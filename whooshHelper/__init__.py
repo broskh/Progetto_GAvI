@@ -1,1 +1,1 @@
-__all__ = ['indexing_helper']
+__all__ = ['indexing_helper', 'retrieveHelper']

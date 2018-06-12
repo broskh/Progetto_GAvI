@@ -1,0 +1,378 @@
+-------: [02:34:07] -------
+START: [02:34:07] 
+MENU: [02:34:07] Menu principale mostrato.
+>>MAIN: [02:34:19] Rimozione dell'indice in corso
+MENU: [02:34:23] Menu principale mostrato.
+-------: [02:34:38] -------
+START: [02:34:38] 
+MENU: [02:34:38] Menu principale mostrato.
+>>INDEXING: [02:34:42] Creata cartella 'index'.
+>>INDEXING: [02:34:42] Creato nuovo indice.
+>>INDEXING: [02:34:42] Indicizzazione iniziata.
+-------: [02:35:44] -------
+START: [02:35:44] 
+MENU: [02:35:44] Menu principale mostrato.
+>>INDEXING: [02:35:46] Aperto indice esistente.
+>>INDEXING: [02:35:46] Indicizzazione iniziata.
+>>INDEXING: [02:35:46] Indicizzazione terminata.
+MENU: [02:35:46] Menu principale mostrato.
+MENU: [02:35:58] Menu di configurazione mostrato.
+MENU: [02:36:26] Menu di configurazione mostrato.
+MENU: [02:36:41] Menu di configurazione mostrato.
+MENU: [02:36:46] Menu principale mostrato.
+>>INDEXING: [02:36:48] Aperto indice esistente.
+>>INDEXING: [02:36:48] Indicizzazione iniziata.
+>>INDEXING: [02:36:48] Indicizzazione terminata.
+MENU: [02:36:48] Menu principale mostrato.
+MENU: [02:36:56] Menu principale mostrato.
+-------: [11:21:12] -------
+START: [11:21:12] 
+MENU: [11:21:12] Menu principale mostrato.
+-------: [11:31:05] -------
+START: [11:31:05] 
+MENU: [11:31:05] Menu principale mostrato.
+IRMENU: [11:31:22] IR configuration menu displayed
+-------: [11:38:55] -------
+START: [11:38:55] 
+MENU: [11:38:55] Menu principale mostrato.
+IRMENU: [11:39:01] IR configuration menu displayed
+-------: [11:41:30] -------
+START: [11:41:30] 
+MENU: [11:41:30] Menu principale mostrato.
+IRMENU: [11:41:32] IR configuration menu displayed
+-------: [11:46:53] -------
+START: [11:46:53] 
+MENU: [11:46:53] Menu principale mostrato.
+IRMENU: [11:46:54] IR configuration menu displayed
+MENU: [11:46:57] Menu principale mostrato.
+-------: [11:48:59] -------
+START: [11:48:59] 
+MENU: [11:48:59] Menu principale mostrato.
+-------: [11:50:29] -------
+START: [11:50:29] 
+MENU: [11:50:29] Menu principale mostrato.
+IRMENU: [11:50:31] IR configuration menu displayed
+MENU: [11:50:34] Menu principale mostrato.
+IRMENU: [11:50:40] IR configuration menu displayed
+MENU: [11:50:42] Menu principale mostrato.
+-------: [11:50:54] -------
+START: [11:50:54] 
+MENU: [11:50:54] Menu principale mostrato.
+>>INDEXING: [11:50:58] Aperto indice esistente.
+>>INDEXING: [11:50:58] Indicizzazione iniziata.
+>>INDEXING: [11:50:58] Indicizzazione terminata.
+MENU: [11:50:58] Menu principale mostrato.
+>>MAIN: [11:51:13] Rimozione dell'indice in corso
+MENU: [11:51:13] Menu principale mostrato.
+>>ERROR: [11:51:20] Opzione scelta non valida
+MENU: [11:51:20] Menu principale mostrato.
+>>INDEXING: [11:51:23] Creata cartella 'index'.
+>>INDEXING: [11:51:23] Creato nuovo indice.
+>>INDEXING: [11:51:23] Indicizzazione iniziata.
+>>INDEXING: [11:51:23] Indicizzazione terminata.
+MENU: [11:51:23] Menu principale mostrato.
+>>MAIN: [12:02:44] Rimozione dell'indice in corso
+MENU: [12:02:47] Menu principale mostrato.
+>>INDEXING: [12:02:49] Creata cartella 'index'.
+>>INDEXING: [12:02:49] Creato nuovo indice.
+>>INDEXING: [12:02:49] Indicizzazione iniziata.
+>>INDEXING: [12:02:49] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' iniziata.
+>>INDEXING: [12:02:49] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' iniziata.
+>>INDEXING: [02:11:34] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' terminata.
+>>INDEXING: [02:11:34] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' iniziata.
+>>INDEXING: [04:53:24] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' terminata.
+>>INDEXING: [04:53:24] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' terminata.
+>>INDEXING: [09:29:33] Indicizzazione terminata.
+MENU: [09:29:34] Menu principale mostrato.
+-------: [10:51:09] -------
+START: [10:51:09] 
+MENU: [10:51:09] Menu principale mostrato.
+IRMENU: [10:51:20] IR configuration menu displayed
+-------: [01:42:08] -------
+START: [01:42:08] 
+MENU: [01:42:08] Menu principale mostrato.
+IRMENU: [01:42:20] IR configuration menu displayed
+-------: [01:46:59] -------
+START: [01:46:59] 
+MENU: [01:46:59] Menu principale mostrato.
+>>INDEXING: [01:47:06] Aperto indice esistente.
+>>INDEXING: [01:47:06] Indicizzazione iniziata.
+>>INDEXING: [01:47:06] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' iniziata.
+>>INDEXING: [01:47:06] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' iniziata.
+-------: [01:47:27] -------
+START: [01:47:27] 
+MENU: [01:47:27] Menu principale mostrato.
+IRMENU: [01:47:33] IR configuration menu displayed
+-------: [02:11:30] -------
+START: [02:11:30] 
+MENU: [02:11:31] Menu principale mostrato.
+IRMENU: [02:11:34] IR configuration menu displayed
+-------: [02:15:39] -------
+START: [02:15:39] 
+MENU: [02:15:39] Menu principale mostrato.
+IRMENU: [02:15:44] IR configuration menu displayed
+-------: [02:17:00] -------
+START: [02:17:01] 
+MENU: [02:17:01] Menu principale mostrato.
+-------: [02:17:26] -------
+START: [02:17:26] 
+MENU: [02:17:27] Menu principale mostrato.
+IRMENU: [02:17:29] IR configuration menu displayed
+-------: [02:24:45] -------
+START: [02:24:45] 
+MENU: [02:24:45] Menu principale mostrato.
+IRMENU: [02:24:48] IR configuration menu displayed
+MENU: [02:27:17] Menu principale mostrato.
+-------: [02:30:09] -------
+START: [02:30:09] 
+MENU: [02:30:09] Menu principale mostrato.
+IRMENU: [02:30:10] IR configuration menu displayed
+MENU: [02:32:27] Menu principale mostrato.
+-------: [02:33:42] -------
+START: [02:33:42] 
+MENU: [02:33:42] Menu principale mostrato.
+IRMENU: [02:33:46] IR configuration menu displayed
+MENU: [02:38:15] Menu principale mostrato.
+-------: [02:43:08] -------
+START: [02:43:08] 
+MENU: [02:43:08] Menu principale mostrato.
+>>MAIN: [02:43:11] Rimozione dell'indice in corso
+MENU: [02:43:13] Menu principale mostrato.
+>>INDEXING: [02:43:15] Creata cartella 'index'.
+>>INDEXING: [02:43:15] Creato nuovo indice.
+>>INDEXING: [02:43:15] Indicizzazione iniziata.
+>>INDEXING: [02:43:15] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' iniziata.
+>>INDEXING: [02:43:15] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' iniziata.
+>>INDEXING: [04:38:10] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' terminata.
+>>INDEXING: [04:38:10] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' iniziata.
+-------: [05:43:57] -------
+START: [05:43:57] 
+MENU: [05:43:57] Menu principale mostrato.
+>>MAIN: [05:44:02] Rimozione dell'indice in corso
+MENU: [05:44:05] Menu principale mostrato.
+>>INDEXING: [05:44:14] Creata cartella 'index'.
+>>INDEXING: [05:44:14] Creato nuovo indice.
+>>INDEXING: [05:44:14] Indicizzazione iniziata.
+>>INDEXING: [05:44:14] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' iniziata.
+>>INDEXING: [05:44:14] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' iniziata.
+>>INDEXING: [07:41:42] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' terminata.
+>>INDEXING: [07:41:42] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' iniziata.
+>>INDEXING: [10:24:37] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' terminata.
+>>INDEXING: [10:24:37] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' terminata.
+>>INDEXING: [02:59:16] Indicizzazione terminata.
+MENU: [02:59:17] Menu principale mostrato.
+>>ERROR: [02:59:17] Opzione scelta non valida
+MENU: [02:59:17] Menu principale mostrato.
+-------: [05:31:06] -------
+START: [05:31:06] 
+MENU: [05:31:06] Menu principale mostrato.
+MENU: [05:31:11] Menu di configurazione mostrato.
+IRMENU: [05:31:21] IR configuration menu displayed
+IRMENU: [05:31:33] IR configuration menu displayed
+MENU: [05:31:40] Menu di configurazione mostrato.
+MENU: [05:31:48] Menu principale mostrato.
+MENU: [05:36:50] Menu principale mostrato.
+-------: [02:21:03] -------
+START: [02:21:03] 
+MENU: [02:21:03] Menu principale mostrato.
+-------: [02:35:13] -------
+START: [02:35:13] 
+MENU: [02:35:14] Menu principale mostrato.
+-------: [02:46:38] -------
+START: [02:46:38] 
+MENU: [02:46:38] Menu principale mostrato.
+MENU: [02:46:45] Menu di configurazione mostrato.
+IRMENU: [03:00:29] IR configuration menu displayed
+IRMENU: [03:00:34] IR configuration menu displayed
+MENU: [03:00:40] Menu di configurazione mostrato.
+MENU: [03:00:50] Menu di configurazione mostrato.
+MENU: [03:00:55] Menu principale mostrato.
+MENU: [03:05:42] Menu principale mostrato.
+-------: [03:13:53] -------
+START: [03:13:53] 
+MENU: [03:13:53] Menu principale mostrato.
+-------: [03:33:34] -------
+START: [03:33:34] 
+MENU: [03:33:35] Menu principale mostrato.
+-------: [03:38:41] -------
+START: [03:38:41] 
+MENU: [03:38:41] Menu principale mostrato.
+-------: [09:58:42] -------
+START: [09:58:42] 
+MENU: [09:58:42] Menu principale mostrato.
+-------: [10:21:40] -------
+START: [10:21:40] 
+MENU: [10:21:41] Menu principale mostrato.
+-------: [11:46:18] -------
+START: [11:46:18] 
+MENU: [11:46:18] Menu principale mostrato.
+-------: [12:37:47] -------
+START: [12:37:47] 
+MENU: [12:37:47] Menu principale mostrato.
+-------: [01:33:54] -------
+START: [01:33:54] 
+MENU: [01:33:54] Menu principale mostrato.
+-------: [02:14:21] -------
+START: [02:14:21] 
+MENU: [02:14:21] Menu principale mostrato.
+-------: [02:38:05] -------
+START: [02:38:05] 
+MENU: [02:38:05] Menu principale mostrato.
+MENU: [02:38:10] Menu di configurazione mostrato.
+IRMENU: [02:38:17] IR configuration menu displayed
+IRMENU: [02:38:18] IR configuration menu displayed
+IRMENU: [02:38:21] IR configuration menu displayed
+IRMENU: [02:38:23] IR configuration menu displayed
+IRMENU: [02:38:24] IR configuration menu displayed
+IRMENU: [02:38:24] IR configuration menu displayed
+IRMENU: [02:38:24] IR configuration menu displayed
+IRMENU: [02:38:24] IR configuration menu displayed
+IRMENU: [02:38:24] IR configuration menu displayed
+IRMENU: [02:38:28] IR configuration menu displayed
+MENU: [02:38:30] Menu di configurazione mostrato.
+IRMENU: [02:38:50] IR configuration menu displayed
+IRMENU: [02:38:52] IR configuration menu displayed
+IRMENU: [02:40:29] IR configuration menu displayed
+MENU: [02:40:33] Menu di configurazione mostrato.
+MENU: [02:40:38] Menu principale mostrato.
+-------: [02:40:42] -------
+START: [02:40:42] 
+MENU: [02:40:42] Menu principale mostrato.
+MENU: [02:40:46] Menu di configurazione mostrato.
+IRMENU: [02:40:51] IR configuration menu displayed
+IRMENU: [02:40:52] IR configuration menu displayed
+IRMENU: [02:40:53] IR configuration menu displayed
+MENU: [02:41:18] Menu di configurazione mostrato.
+MENU: [02:41:20] Menu principale mostrato.
+-------: [02:41:23] -------
+START: [02:41:23] 
+MENU: [02:41:23] Menu principale mostrato.
+MENU: [02:41:26] Menu di configurazione mostrato.
+IRMENU: [02:41:28] IR configuration menu displayed
+IRMENU: [02:41:31] IR configuration menu displayed
+IRMENU: [02:41:35] IR configuration menu displayed
+MENU: [02:41:37] Menu di configurazione mostrato.
+IRMENU: [02:41:41] IR configuration menu displayed
+IRMENU: [02:41:42] IR configuration menu displayed
+IRMENU: [02:41:48] IR configuration menu displayed
+IRMENU: [02:41:49] IR configuration menu displayed
+IRMENU: [02:41:50] IR configuration menu displayed
+MENU: [02:41:52] Menu di configurazione mostrato.
+MENU: [02:41:56] Menu principale mostrato.
+-------: [03:15:05] -------
+START: [03:15:05] 
+MENU: [03:15:06] Menu principale mostrato.
+-------: [03:40:00] -------
+START: [03:40:00] 
+MENU: [03:40:00] Menu principale mostrato.
+-------: [03:45:26] -------
+START: [03:45:26] 
+MENU: [03:45:26] Menu principale mostrato.
+-------: [03:48:56] -------
+START: [03:48:56] 
+MENU: [03:48:56] Menu principale mostrato.
+MENU: [04:02:46] Menu principale mostrato.
+-------: [04:05:20] -------
+START: [04:05:20] 
+MENU: [04:05:20] Menu principale mostrato.
+-------: [04:29:54] -------
+START: [04:29:54] 
+MENU: [04:29:55] Menu principale mostrato.
+-------: [04:42:12] -------
+START: [04:42:12] 
+MENU: [04:42:12] Menu principale mostrato.
+MENU: [04:42:16] Menu di configurazione mostrato.
+IRMENU: [04:42:19] IR configuration menu displayed
+IRMENU: [04:42:21] IR configuration menu displayed
+MENU: [04:42:23] Menu di configurazione mostrato.
+MENU: [04:42:27] Menu principale mostrato.
+-------: [05:01:37] -------
+START: [05:01:37] 
+MENU: [05:01:37] Menu principale mostrato.
+-------: [11:45:47] -------
+START: [11:45:47] 
+MENU: [11:45:47] Menu principale mostrato.
+-------: [12:28:49] -------
+START: [12:28:49] 
+MENU: [12:28:49] Menu principale mostrato.
+-------: [12:29:05] -------
+START: [12:29:05] 
+MENU: [12:29:05] Menu principale mostrato.
+MENU: [12:29:09] Menu di configurazione mostrato.
+IRMENU: [12:29:11] IR configuration menu displayed
+-------: [12:31:42] -------
+START: [12:31:42] 
+MENU: [12:31:42] Menu principale mostrato.
+MENU: [12:31:44] Menu di configurazione mostrato.
+IRMENU: [12:31:46] IR configuration menu displayed
+IRMENU: [12:31:47] IR configuration menu displayed
+IRMENU: [12:31:52] IR configuration menu displayed
+IRMENU: [12:32:58] IR configuration menu displayed
+IRMENU: [12:33:04] IR configuration menu displayed
+-------: [12:37:22] -------
+START: [12:37:22] 
+MENU: [12:37:22] Menu principale mostrato.
+MENU: [12:37:25] Menu di configurazione mostrato.
+IRMENU: [12:37:26] IR configuration menu displayed
+-------: [12:37:56] -------
+START: [12:37:56] 
+MENU: [12:37:56] Menu principale mostrato.
+MENU: [12:37:59] Menu di configurazione mostrato.
+IRMENU: [12:38:00] IR configuration menu displayed
+IRMENU: [12:38:15] IR configuration menu displayed
+MENU: [12:38:19] Menu di configurazione mostrato.
+MENU: [12:38:23] Menu principale mostrato.
+-------: [12:38:55] -------
+START: [12:38:55] 
+MENU: [12:38:55] Menu principale mostrato.
+MENU: [12:38:59] Menu di configurazione mostrato.
+IRMENU: [12:38:59] IR configuration menu displayed
+IRMENU: [12:39:03] IR configuration menu displayed
+IRMENU: [12:39:10] IR configuration menu displayed
+MENU: [12:39:15] Menu di configurazione mostrato.
+MENU: [12:39:19] Menu principale mostrato.
+-------: [12:40:54] -------
+START: [12:40:54] 
+MENU: [12:40:54] Menu principale mostrato.
+MENU: [12:40:58] Menu di configurazione mostrato.
+IRMENU: [12:40:59] IR configuration menu displayed
+IRMENU: [12:41:02] IR configuration menu displayed
+IRMENU: [12:41:14] IR configuration menu displayed
+MENU: [12:41:17] Menu di configurazione mostrato.
+MENU: [12:41:32] Menu principale mostrato.
+MENU: [12:58:06] Menu principale mostrato.
+-------: [03:03:04] -------
+START: [03:03:04] 
+MENU: [03:03:04] Menu principale mostrato.
+-------: [03:03:26] -------
+START: [03:03:26] 
+MENU: [03:03:26] Menu principale mostrato.
+>>MAIN: [03:03:31] Rimozione dell'indice in corso
+MENU: [03:03:32] Menu principale mostrato.
+MENU: [03:03:35] Menu di configurazione mostrato.
+>>ERROR: [03:03:44] Opzione scelta non valida
+MENU: [03:03:44] Menu di configurazione mostrato.
+>>ERROR: [03:03:46] Opzione scelta non valida
+MENU: [03:03:46] Menu di configurazione mostrato.
+MENU: [03:04:02] Menu di configurazione mostrato.
+MENU: [03:04:12] Menu di configurazione mostrato.
+MENU: [03:04:27] Menu di configurazione mostrato.
+IRMENU: [03:04:36] IR configuration menu displayed
+IRMENU: [03:04:40] IR configuration menu displayed
+IRMENU: [03:04:45] IR configuration menu displayed
+MENU: [03:04:48] Menu di configurazione mostrato.
+MENU: [03:04:51] Menu principale mostrato.
+>>INDEXING: [03:05:00] Creata cartella 'index'.
+>>INDEXING: [03:05:00] Creato nuovo indice.
+>>INDEXING: [03:05:00] Indicizzazione iniziata.
+>>INDEXING: [03:05:00] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' iniziata.
+>>INDEXING: [03:05:00] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' iniziata.
+>>INDEXING: [04:15:11] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' terminata.
+>>INDEXING: [04:15:11] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' iniziata.
+>>INDEXING: [06:03:43] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' terminata.
+>>INDEXING: [06:03:43] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' terminata.
+>>INDEXING: [07:47:22] Indicizzazione terminata.
+MENU: [07:47:23] Menu principale mostrato.
+-------: [11:26:34] -------
+START: [11:26:34] 
+MENU: [11:26:34] Menu principale mostrato.

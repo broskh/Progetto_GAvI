@@ -7,8 +7,9 @@ import os
 
 from util import *
 from whooshHelper import *
+from irUtil import *
 
-# from whoosh.index import open_dir
+from whoosh.index import open_dir
 
 TAG = "MAIN"
 
@@ -16,6 +17,7 @@ TAG = "MAIN"
 def main():
     manage_arguments()
     conf = config.get_config()
+    # irConf = irConfig.get_ir_config()
     log.set_log_file(conf['LOG_FILE'])
     if conf['DEBUG']:
         log.enable_debug()
@@ -39,10 +41,11 @@ def main():
             indexing_helper.index_documents()
         elif value == '2':
             print("Scelta 2")
-            # if os.path.exists(indexing_helper.INDEX_FOLDER_NAME):
-            #     index = open_dir(indexing_helper.INDEX_FOLDER_NAME)
-            # else:
-            #     log.print_console("ERROR", "Indicizza prima una collezioni documenti")
+            if os.path.exists(indexing_helper.INDEX_FOLDER_NAME):
+                index = open_dir(indexing_helper.INDEX_FOLDER_NAME)
+                retrieveHelper.retrieve_docs(index)
+            else:
+                log.print_console("ERROR", "Index a collection of documents first")
         elif value == '3':
             log.print_console(TAG, "Rimozione dell'indice in corso")
             shutil.rmtree(indexing_helper.INDEX_FOLDER_NAME, ignore_errors=True)
@@ -67,7 +70,7 @@ def config_menu():
             'Modifica la dimensione massima dei q-grams',
             'Modifica il limite di memoria RAM per processore (MB) utilizzata per l\'indicizzazione',
             'Modifica il numero di processori utilizzati per l\'indicizzazione',
-            'Abilita/Disabilita il multisegment per l\'indicizzazione', 'Modifica il percorso del file di log',
+            'Abilita/Disabilita il multisegment per l\'indicizzazione', 'Change IR model', 'Modifica il percorso del file di log',
             'Abilita/Disabilita il debug', 'Salva ed esci', 'Esci senza salvare']
     i = 1
     while True:
@@ -257,6 +260,8 @@ def config_menu():
                 clear_terminal()
             temp_config['INDEXING_MULTISEGMENT'] = value
         elif value == '14':
+            irmenu = ir_config_menu()
+        elif value == '15':
             while True:
                 print("[Valore attuale: '" + temp_config['LOG_FILE'] + "']")
                 print("[Valore accettato: Percorso assoluto o relativo (rispetto alla cartella radice del progetto)]")
@@ -266,7 +271,7 @@ def config_menu():
                 input("Valore inserito non valido. Premi invio per continuare")
                 clear_terminal()
             temp_config['LOG_FILE'] = value
-        elif value == '15':
+        elif value == '16':
             if temp_config['DEBUG']:
                 old_value = "Yes"
             else:
@@ -284,15 +289,85 @@ def config_menu():
                 input("Valore inserito non valido. Premi invio per continuare")
                 clear_terminal()
             temp_config['DEBUG'] = value
-        elif value == '16':
+        elif value == '17':
             config.write_config(temp_config)
             break
-        elif value == '17':
+        elif value == '18':
             break
         else:
             log.print_console("ERROR", "Opzione scelta non valida")
         i = 1
     return config.get_config()
+
+
+def ir_config_menu():
+    irConfigTmp = irConfig.get_ir_config()
+    irMenu = ['BOOLEAN MODEL', 'FUZZY_MODEL', 'PROBABILISTIC_MODEL', 'SORT_BY_DATE',
+              'Save & Quit',
+              'Quit without saving']
+
+    i = 1
+    while True:
+        for voice in irMenu:
+            print(str(i) + ") " + voice)
+            i = i + 1
+        log.print_log("IRMENU", "IR configuration menu displayed")
+        value = input("Choose the IR model you want to use: ")
+        clear_terminal()
+        if value == '1':
+            clear_terminal()            
+            print("Boolean model: ENABLED")
+            print()
+            cfgVal = True
+            
+            irConfigTmp['BOOLEAN_MODEL'] = cfgVal
+            irConfigTmp['FUZZY_MODEL'] = not cfgVal
+            irConfigTmp['PROBABILISTIC_MODEL'] = not cfgVal
+        elif value == '2':
+            clear_terminal()
+            print("Fuzzy model: ENABLED")
+            print()
+            cfgVal = True
+
+            irConfigTmp['BOOLEAN_MODEL'] = not cfgVal
+            irConfigTmp['FUZZY_MODEL'] = cfgVal
+            irConfigTmp['PROBABILISTIC_MODEL'] = not cfgVal
+        elif value == '3':
+            clear_terminal()
+            print("Probabilistic model: ENABLED")
+            print()
+            cfgVal = True
+
+            irConfigTmp['BOOLEAN_MODEL'] = not cfgVal
+            irConfigTmp['FUZZY_MODEL'] = not cfgVal
+            irConfigTmp['PROBABILISTIC_MODEL'] = cfgVal
+        elif value == '4':
+            if irConfigTmp['SORT_BY_DATE']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Actual value: '" + old_value + "']")
+                print("[Accepted Values: 'Yes' or 'No']")
+                cafgVal = input("Enter new value: ")
+                if cafgVal == "Yes" or cafgVal == "yes" or cafgVal == "Y" or cafgVal == "y":
+                    cafgVal = True
+                    break
+                elif cafgVal == "No" or cafgVal == "no" or cafgVal == "N" or cafgVal == "n":
+                    cafgVal = False
+                    break
+                input("Invalid value: press enter to continue")
+                clear_terminal()
+            irConfigTmp['SORT_BY_DATE'] = cafgVal
+        elif value == '5':
+            irConfig.write_ir_config(irConfigTmp)
+            break
+        elif value == '6':
+            break
+        else:
+            log.print_console("IRMENU ERROR", "Invalid option")
+        i = 1
+    return irConfig.get_ir_config()
 
 
 def manage_arguments():
