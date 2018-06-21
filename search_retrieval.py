@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse
 import sys
 import os
+import time
 
 from util import *
 from whooshHelper import *
@@ -38,7 +39,9 @@ def main():
         value = input("Scegli un'opzione: ")
         clear_terminal()
         if value == '1':
+            time_start = time.time()
             indexing_helper.index_documents()
+            log.print_debug(TAG, "Tempo di indicizzazione: " + str(time.time() - time_start) + " sec")
         elif value == '2':
             print("Scelta 2")
             if os.path.exists(indexing_helper.INDEX_FOLDER_NAME):

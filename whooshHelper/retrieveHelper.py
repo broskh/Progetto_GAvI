@@ -1,9 +1,14 @@
 import os
+import time
 
 from whoosh import qparser
 from whoosh.qparser import QueryParser
 
 from irUtil import *
+from util import *
+
+
+TAG = "RetrieveHelper"
 
 
 def retrieve_docs(index):
@@ -12,7 +17,9 @@ def retrieve_docs(index):
 
     try:
         print('[retrieve_docs] creating searcher')
+        time_start = time.time()
         src = index.searcher()
+        log.print_debug(TAG, "Tempo di creazione del searcher: " + str(time.time() - time_start) + " sec")
 
         goOn = True
         while goOn:

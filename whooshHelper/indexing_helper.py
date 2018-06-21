@@ -75,37 +75,38 @@ def index_documents():
                         remove_files(temp_files)
                     log.print_console(TAG, "Indicizzazione del file: '" + file + "' terminata.")
             log.print_console(TAG, "Indicizzazione del dataset: '" + dataset_folder + "' terminata.")
-    writer.commit(optimize=True)
+    # writer.commit(optimize=True)
+    writer.commit()
     log.print_console(TAG, "Indicizzazione terminata.")
 
 
 # Create the schema for the index
 def create_schema():
     my_analyzer = create_analyzer()
-    schema = Schema(pmid=ID(unique=True, stored=True), publisher_name=TEXT(stored=True, analyzer=my_analyzer),
-                    journal_title=TEXT(stored=True, analyzer=my_analyzer), issn=ID(stored=True),
-                    volume=TEXT(stored=True, analyzer=my_analyzer), issue=TEXT(stored=True, analyzer=my_analyzer),
-                    publish_date=DATETIME(stored=True, sortable=True), publish_season=TEXT(stored=True, analyzer=my_analyzer),
-                    title=TEXT(stored=True, analyzer=my_analyzer), first_page=NUMERIC(stored=True),
-                    last_page=NUMERIC(stored=True), language=TEXT(stored=True, analyzer=my_analyzer),
-                    publication_type=TEXT(stored=True, analyzer=my_analyzer),
-                    publication_date_received=DATETIME(stored=True), publication_date_accepted=DATETIME(stored=True),
-                    publication_date_revised=DATETIME(stored=True), publication_date_aheadofprint=DATETIME(stored=True),
-                    publication_date_epublish=DATETIME(stored=True), publication_date_ppublish=DATETIME(stored=True),
-                    publication_date_ecollection=DATETIME(stored=True), content=TEXT(stored=True, analyzer=my_analyzer),
-                    copyright=TEXT(stored=True, analyzer=my_analyzer),
-                    coi_statment=TEXT(stored=True, analyzer=my_analyzer), keywords=KEYWORD)
-    schema.add("author_first_name_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("author_last_name_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("author_middle_name_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("author_suffix_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("author_collective_name_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("author_affiliation_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("group_name_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("group_name_*_group_component_first_name_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("group_name_*_group_component_last_name_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("group_name_*_group_component_middle_name_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
-    schema.add("group_name_*_group_component_suffix_*", TEXT(stored=True, analyzer=my_analyzer), glob=True)
+    schema = Schema(pmid=ID(unique=True), publisher_name=TEXT(analyzer=my_analyzer),
+                    journal_title=TEXT(analyzer=my_analyzer), issn=ID(),
+                    volume=TEXT(analyzer=my_analyzer), issue=TEXT(analyzer=my_analyzer),
+                    publish_date=DATETIME(stored=True, sortable=True), publish_season=TEXT(analyzer=my_analyzer),
+                    title=TEXT(stored=True, analyzer=my_analyzer), first_page=NUMERIC(),
+                    last_page=NUMERIC(), language=TEXT(analyzer=my_analyzer),
+                    publication_type=TEXT(analyzer=my_analyzer),
+                    publication_date_received=DATETIME(), publication_date_accepted=DATETIME(),
+                    publication_date_revised=DATETIME(), publication_date_aheadofprint=DATETIME(),
+                    publication_date_epublish=DATETIME(), publication_date_ppublish=DATETIME(),
+                    publication_date_ecollection=DATETIME(), content=TEXT(analyzer=my_analyzer),
+                    copyright=TEXT(analyzer=my_analyzer),
+                    coi_statment=TEXT(analyzer=my_analyzer), keywords=KEYWORD)
+    schema.add("author_first_name_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("author_last_name_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("author_middle_name_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("author_suffix_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("author_collective_name_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("author_affiliation_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("group_name_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("group_name_*_group_component_first_name_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("group_name_*_group_component_last_name_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("group_name_*_group_component_middle_name_*", TEXT(analyzer=my_analyzer), glob=True)
+    schema.add("group_name_*_group_component_suffix_*", TEXT(analyzer=my_analyzer), glob=True)
     log.print_debug(TAG, "Schema creato")
     return schema
 
