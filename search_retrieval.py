@@ -527,16 +527,20 @@ def manage_arguments():
     if args['boolean_model']:
         if args['boolean_model'] == 'True':
             new_conf['BOOLEAN_MODEL'] = True
+            new_conf['FUZZY_MODEL'] = False
         elif args['boolean_model'] == 'False':
             new_conf['BOOLEAN_MODEL'] = False
+            new_conf['FUZZY_MODEL'] = True
         else:
             print("Invalid value!")
             sys.exit(1)
     if args['fuzzy_model']:
         if args['fuzzy_model'] == 'True':
             new_conf['FUZZY_MODEL'] = True
+            new_conf['BOOLEAN_MODEL'] = False
         elif args['fuzzy_model'] == 'False':
             new_conf['FUZZY_MODEL'] = False
+            new_conf['BOOLEAN_MODEL'] = True
         else:
             print("Invalid value!")
             sys.exit(1)
