@@ -3,12 +3,12 @@ import os
 from whoosh import qparser
 from whoosh.qparser import QueryParser
 
-from irUtil import *
+from util import *
 
 
 def retrieve_docs(index):
 
-    irCfg = irConfig.get_ir_config()
+    irCfg = Config.get_config()
 
     try:
         print('[retrieve_docs] creating searcher')

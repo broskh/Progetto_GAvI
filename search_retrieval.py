@@ -7,7 +7,6 @@ import os
 
 from util import *
 from whooshHelper import *
-from irUtil import *
 
 from whoosh.index import open_dir
 
@@ -70,8 +69,10 @@ def config_menu():
             'Modifica la dimensione massima dei q-grams',
             'Modifica il limite di memoria RAM per processore (MB) utilizzata per l\'indicizzazione',
             'Modifica il numero di processori utilizzati per l\'indicizzazione',
-            'Abilita/Disabilita il multisegment per l\'indicizzazione', 'Change IR model', 'Modifica il percorso del file di log',
+            'Abilita/Disabilita il multisegment per l\'indicizzazione', 'Modifica il percorso del file di log',
+            'Enable/Disable sorting by date', 'Enable/Disable IR Boolean model', 'Enable/Disable IR Fuzzy Model', 'Enable/Disable IR Probabilistic Model',
             'Abilita/Disabilita il debug', 'Salva ed esci', 'Esci senza salvare']
+
     i = 1
     while True:
         clear_terminal()
@@ -260,8 +261,6 @@ def config_menu():
                 clear_terminal()
             temp_config['INDEXING_MULTISEGMENT'] = value
         elif value == '14':
-            irmenu = ir_config_menu()
-        elif value == '15':
             while True:
                 print("[Valore attuale: '" + temp_config['LOG_FILE'] + "']")
                 print("[Valore accettato: Percorso assoluto o relativo (rispetto alla cartella radice del progetto)]")
@@ -271,11 +270,99 @@ def config_menu():
                 input("Valore inserito non valido. Premi invio per continuare")
                 clear_terminal()
             temp_config['LOG_FILE'] = value
-        elif value == '16':
-            if temp_config['DEBUG']:
+        elif value == '15':
+            if temp_config['SORT_BY_DATE']:
                 old_value = "Yes"
             else:
                 old_value = "No"
+            #	cafVal = True
+            while True:
+                print("[Actual value: '" + old_value + "']")
+                print("[Accepted Values: 'Yes' or 'No']")
+                cafgVal = input("Enter new value: ")
+                if cafgVal == "Yes" or cafgVal == "yes" or cafgVal == "Y" or cafgVal == "y":
+                    cafgVal = True
+                    break
+                elif cafgVal == "No" or cafgVal == "no" or cafgVal == "N" or cafgVal == "n":
+                    cafgVal = False
+                    break
+                input("Invalid value: press enter to continue")
+                clear_terminal()
+            temp_config['SORT_BY_DATE'] = cafgVal
+        if value == '16':
+            if temp_config['BOOLEAN_MODEL']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Actual value: '" + old_value + "']")
+                print("[Accepted Values: 'Yes' or 'No']")
+                cfgVal = input("Enter new value: ")
+                if cfgVal == "Yes" or cfgVal == "yes" or cfgVal == "Y" or cfgVal == "y":
+                    cfgVal = True
+                    temp_config['BOOLEAN_MODEL'] = cfgVal
+                    temp_config['FUZZY_MODEL'] = not cfgVal
+                    temp_config['PROBABILISTIC_MODEL'] = not cfgVal
+                    break
+                elif cfgVal == "No" or cfgVal == "no" or cfgVal == "N" or cfgVal == "n":
+                    cfgVal = False
+                    temp_config['BOOLEAN_MODEL'] = cfgVal
+                    temp_config['FUZZY_MODEL'] = not cfgVal
+                    temp_config['PROBABILISTIC_MODEL'] = cfgVal
+                    break
+                input("Invalid value: press enter to continue")
+                clear_terminal()
+        elif value == '17':
+            if temp_config['FUZZY_MODEL']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Actual value: '" + old_value + "']")
+                print("[Accepted Values: 'Yes' or 'No']")
+                cfgVal = input("Enter new value: ")
+                if cfgVal == "Yes" or cfgVal == "yes" or cfgVal == "Y" or cfgVal == "y":
+                    cfgVal = True
+                    temp_config['BOOLEAN_MODEL'] = not cfgVal
+                    temp_config['FUZZY_MODEL'] = cfgVal
+                    temp_config['PROBABILISTIC_MODEL'] = not cfgVal
+                    break
+                elif cfgVal == "No" or cfgVal == "no" or cfgVal == "N" or cfgVal == "n":
+                    cfgVal = False
+                    temp_config['BOOLEAN_MODEL'] = not cfgVal
+                    temp_config['FUZZY_MODEL'] = cfgVal
+                    temp_config['PROBABILISTIC_MODEL'] = cfgVal
+                    break
+                input("Invalid value: press enter to continue")
+                clear_terminal()
+        elif value == '18':
+            if temp_config['PROBABILISTIC_MODEL']:
+                old_value = "Yes"
+            else:
+                old_value = "No"
+            while True:
+                print("[Actual value: '" + old_value + "']")
+                print("[Accepted Values: 'Yes' or 'No']")
+                cfgVal = input("Enter new value: ")
+                if cfgVal == "Yes" or cfgVal == "yes" or cfgVal == "Y" or cfgVal == "y":
+                    cfgVal = True
+                    temp_config['BOOLEAN_MODEL'] = not cfgVal
+                    temp_config['FUZZY_MODEL'] = not cfgVal
+                    temp_config['PROBABILISTIC_MODEL'] = cfgVal
+                    break
+                elif cfgVal == "No" or cfgVal == "no" or cfgVal == "N" or cfgVal == "n":
+                    cfgVal = False
+                    temp_config['BOOLEAN_MODEL'] = not cfgVal
+                    temp_config['FUZZY_MODEL'] = cfgVal
+                    temp_config['PROBABILISTIC_MODEL'] = cfgVal
+                    break
+                input("Invalid value: press enter to continue")
+                clear_terminal()
+        elif value == '19':
+            if temp_config['DEBUG']:
+                    old_value = "Yes"
+            else:
+                    old_value = "No"
             while True:
                 print("[Valore attuale: '" + old_value + "']")
                 print("[Valore accettato: 'Yes' or 'No']")
@@ -289,85 +376,17 @@ def config_menu():
                 input("Valore inserito non valido. Premi invio per continuare")
                 clear_terminal()
             temp_config['DEBUG'] = value
-        elif value == '17':
+        elif value == '20':
             config.write_config(temp_config)
             break
-        elif value == '18':
+        elif value == '21':
             break
+        elif value == '88':
+            print(' date:', temp_config['SORT_BY_DATE'], ' boolean:', temp_config['BOOLEAN_MODEL'], ' fuzzy:', temp_config['FUZZY_MODEL'], ' prob:', temp_config['PROBABILISTIC_MODEL'])
         else:
             log.print_console("ERROR", "Opzione scelta non valida")
         i = 1
     return config.get_config()
-
-
-def ir_config_menu():
-    irConfigTmp = irConfig.get_ir_config()
-    irMenu = ['BOOLEAN MODEL', 'FUZZY_MODEL', 'PROBABILISTIC_MODEL', 'SORT_BY_DATE',
-              'Save & Quit',
-              'Quit without saving']
-
-    i = 1
-    while True:
-        for voice in irMenu:
-            print(str(i) + ") " + voice)
-            i = i + 1
-        log.print_log("IRMENU", "IR configuration menu displayed")
-        value = input("Choose the IR model you want to use: ")
-        clear_terminal()
-        if value == '1':
-            clear_terminal()            
-            print("Boolean model: ENABLED")
-            print()
-            cfgVal = True
-            
-            irConfigTmp['BOOLEAN_MODEL'] = cfgVal
-            irConfigTmp['FUZZY_MODEL'] = not cfgVal
-            irConfigTmp['PROBABILISTIC_MODEL'] = not cfgVal
-        elif value == '2':
-            clear_terminal()
-            print("Fuzzy model: ENABLED")
-            print()
-            cfgVal = True
-
-            irConfigTmp['BOOLEAN_MODEL'] = not cfgVal
-            irConfigTmp['FUZZY_MODEL'] = cfgVal
-            irConfigTmp['PROBABILISTIC_MODEL'] = not cfgVal
-        elif value == '3':
-            clear_terminal()
-            print("Probabilistic model: ENABLED")
-            print()
-            cfgVal = True
-
-            irConfigTmp['BOOLEAN_MODEL'] = not cfgVal
-            irConfigTmp['FUZZY_MODEL'] = not cfgVal
-            irConfigTmp['PROBABILISTIC_MODEL'] = cfgVal
-        elif value == '4':
-            if irConfigTmp['SORT_BY_DATE']:
-                old_value = "Yes"
-            else:
-                old_value = "No"
-            while True:
-                print("[Actual value: '" + old_value + "']")
-                print("[Accepted Values: 'Yes' or 'No']")
-                cafgVal = input("Enter new value: ")
-                if cafgVal == "Yes" or cafgVal == "yes" or cafgVal == "Y" or cafgVal == "y":
-                    cafgVal = True
-                    break
-                elif cafgVal == "No" or cafgVal == "no" or cafgVal == "N" or cafgVal == "n":
-                    cafgVal = False
-                    break
-                input("Invalid value: press enter to continue")
-                clear_terminal()
-            irConfigTmp['SORT_BY_DATE'] = cafgVal
-        elif value == '5':
-            irConfig.write_ir_config(irConfigTmp)
-            break
-        elif value == '6':
-            break
-        else:
-            log.print_console("IRMENU ERROR", "Invalid option")
-        i = 1
-    return irConfig.get_ir_config()
 
 
 def manage_arguments():
@@ -391,6 +410,9 @@ def manage_arguments():
     parser.add_argument('--indexing-procs-number',
                         help="Modifica il numero di processori utilizzati per l'indicizzazione")
     parser.add_argument('--indexing-multisegment', help="Abilita/Disabilita il multisegment per l'indicizzazione")
+    parser.add_argument('--sort-by-date', help='Enable/Disable sorting by date of retrieved documents')
+    parser.add_argument('--boolean-model', help='Enable Information Retrieval Boolean Model')
+    parser.add_argument('--fuzzy-model', help='Enable Information Retrieval Fuzzy Model')
     parser.add_argument('--log-file', help="Modifica il percorso del file di log")
     parser.add_argument('--debug', help="Abilita/Disabilita il debug")
 
@@ -493,6 +515,30 @@ def manage_arguments():
             new_conf['LOG_FILE'] = args['log_file']
         else:
             print("log_file non valido.")
+            sys.exit(1)
+    if args['sort_by_date']:
+        if args['sort_by_date'] == 'True':
+            new_conf['SORT_BY_DATE'] = True
+        elif args['sort_by_date'] == 'False':
+            new_conf['SORT_BY_DATE'] = False
+        else:
+            print("Invalid value!")
+            sys.exit(1)
+    if args['boolean_model']:
+        if args['boolean_model'] == 'True':
+            new_conf['BOOLEAN_MODEL'] = True
+        elif args['boolean_model'] == 'False':
+            new_conf['BOOLEAN_MODEL'] = False
+        else:
+            print("Invalid value!")
+            sys.exit(1)
+    if args['fuzzy_model']:
+        if args['fuzzy_model'] == 'True':
+            new_conf['FUZZY_MODEL'] = True
+        elif args['fuzzy_model'] == 'False':
+            new_conf['FUZZY_MODEL'] = False
+        else:
+            print("Invalid value!")
             sys.exit(1)
     if args['debug']:
         if args['debug'] == 'True':
