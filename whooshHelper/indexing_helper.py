@@ -68,15 +68,15 @@ def index_documents():
                             log.print_debug(TAG, "Tempo di pulizia xml: " + str(time.time() - time_start) + " sec")
                             xml = ElementTree.fromstring(xml)
                             for medline_citation in xml.iter('MedlineCitation'):
-                                writer.update_document(**set_document_fields(medline_citation))
+                                writer.add_document(**set_document_fields(medline_citation))
                             log.print_debug(TAG, "Indicizzazione del file temporaneo: '" + temp_file + "' terminata.")
                         log.print_debug(TAG, "Tempo di indicizzazione di tutti i file temp: " +
                                         str(time.time() - time_temps) + " sec")
                         remove_files(temp_files)
                     log.print_console(TAG, "Indicizzazione del file: '" + file + "' terminata.")
             log.print_console(TAG, "Indicizzazione del dataset: '" + dataset_folder + "' terminata.")
-    # writer.commit(optimize=True)
-    writer.commit()
+    writer.commit(optimize=True)
+    # writer.commit()
     log.print_console(TAG, "Indicizzazione terminata.")
 
 
@@ -93,7 +93,7 @@ def create_schema():
                     publication_date_received=DATETIME(), publication_date_accepted=DATETIME(),
                     publication_date_revised=DATETIME(), publication_date_aheadofprint=DATETIME(),
                     publication_date_epublish=DATETIME(), publication_date_ppublish=DATETIME(),
-                    publication_date_ecollection=DATETIME(), content=TEXT(analyzer=my_analyzer),
+                    publication_date_ecollection=DATETIME(), content=TEXT(stored=True, analyzer=my_analyzer),
                     copyright=TEXT(analyzer=my_analyzer),
                     coi_statment=TEXT(analyzer=my_analyzer), keywords=KEYWORD)
     schema.add("author_first_name_*", TEXT(analyzer=my_analyzer), glob=True)
