@@ -556,3 +556,43 @@ START: [12:53:36]
 MENU: [12:53:36] Menu principale mostrato.
 MENU: [12:53:43] Menu di configurazione mostrato.
 MENU: [12:53:46] Menu principale mostrato.
+-------: [10:56:31] -------
+START: [10:56:31] 
+MENU: [10:56:31] Menu principale mostrato.
+>>MAIN: [10:56:33] Rimozione dell'indice in corso
+MENU: [10:56:38] Menu principale mostrato.
+>>INDEXING: [10:56:40] Creata cartella 'index'.
+>>INDEXING: [10:56:40] Creato nuovo indice.
+>>INDEXING: [10:56:40] Indicizzazione iniziata.
+>>INDEXING: [10:56:40] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' iniziata.
+>>INDEXING: [10:56:40] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_B.gz' iniziata.
+>>INDEXING: [12:20:55] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_B.gz' terminata.
+>>INDEXING: [12:20:56] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' iniziata.
+>>INDEXING: [01:47:30] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' terminata.
+>>INDEXING: [01:47:30] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_C.gz' iniziata.
+>>INDEXING: [04:00:30] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_C.gz' terminata.
+>>INDEXING: [04:00:30] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' iniziata.
+>>INDEXING: [05:52:14] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' terminata.
+>>INDEXING: [05:52:14] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_A.gz' iniziata.
+>>INDEXING: [08:15:31] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_A.gz' terminata.
+>>INDEXING: [08:15:31] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' terminata.
+-------: [11:15:17] -------
+START: [11:15:17] 
+MENU: [11:15:17] Menu principale mostrato.
+>>MAIN: [11:15:22] Rimozione dell'indice in corso
+MENU: [11:15:23] Menu principale mostrato.
+>>INDEXING: [11:15:26] Creata cartella 'index'.
+>>INDEXING: [11:15:26] Creato nuovo indice.
+>>INDEXING: [11:15:26] Indicizzazione iniziata.
+>>INDEXING: [11:15:26] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' iniziata.
+>>INDEXING: [11:15:26] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_B.gz' iniziata.
+>>INDEXING: [12:37:17] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_B.gz' terminata.
+>>INDEXING: [12:37:17] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' iniziata.
+>>INDEXING: [02:00:34] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_D.gz' terminata.
+>>INDEXING: [02:00:34] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_C.gz' iniziata.
+>>INDEXING: [04:09:05] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_C.gz' terminata.
+>>INDEXING: [04:09:05] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' iniziata.
+>>INDEXING: [06:03:42] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_E.gz' terminata.
+>>INDEXING: [06:03:42] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_A.gz' iniziata.
+>>INDEXING: [08:22:43] Indicizzazione del file: 'datasets/TREC_2004_Genomics_Track_Data/Document_collections/2004_TREC_XML_MEDLINE_A.gz' terminata.
+>>INDEXING: [08:22:43] Indicizzazione del dataset: 'datasets/TREC_2004_Genomics_Track_Data' terminata.

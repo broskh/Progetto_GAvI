@@ -75,8 +75,8 @@ def index_documents():
                         remove_files(temp_files)
                     log.print_console(TAG, "Indicizzazione del file: '" + file + "' terminata.")
             log.print_console(TAG, "Indicizzazione del dataset: '" + dataset_folder + "' terminata.")
-    writer.commit(optimize=True)
-    # writer.commit()
+    # writer.commit(optimize=True)
+    writer.commit()
     log.print_console(TAG, "Indicizzazione terminata.")
 
 

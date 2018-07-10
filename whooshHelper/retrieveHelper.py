@@ -1,6 +1,6 @@
 import os
 
-from whoosh import qparser
+from whoosh import qparser, scoring
 from whoosh.qparser import QueryParser
 
 from util import *
@@ -8,7 +8,7 @@ from util import *
 
 def retrieve_docs(index):
 
-    irCfg = Config.get_config()
+    irCfg = config.get_config()
 
     try:
         print('[retrieve_docs] creating searcher')
@@ -30,13 +30,20 @@ def retrieve_docs(index):
                 print("Showing results for: ", corrected.string)
                 p_query = corrected.query
 
-            print("[retrieve_docs] setting up collector")
-
             print('[retrieve_docs] searching')
             results = set_model_and_search(parser, src, irCfg, p_query)
 
             for r in results:
-                print(r['title'], r['publish_date'])
+                print(r['title'])  # , '-', r['publish_date'])
+                print('\t', end='')
+                i = 0
+                for char in r.highlights("content"):
+                    print(char, end='')
+                    i = i + 1
+                    if i%128 == 0:
+                        print()
+                        print('\t', end='')
+                print()
 
             print('Found ', results.estimated_length(), ' matching documents')
             print()
@@ -61,24 +68,37 @@ def simplify_parser(prs):
 
 
 def set_model_and_search(prs, searcher, cfg, q):
-    cltrTmp = searcher.collector(limit=10)
 
     if cfg['BOOLEAN_MODEL']:
-        cltrTmp.prepare(searcher, q, searcher.boolean_context())
+        cltrTmp = 0
         if cfg['SORT_BY_DATE']:
-            resultTmp = searcher.searc_with_collector(q, cltrTmp, sortedby='publish_date')
+            cltrTmp = searcher.collector.SortingCollector(limit=10, sortedby="publish_date")
+            cltrTmp.prepare(searcher, q, searcher.boolean_context())
+            resultTmp = searcher.search_with_collector(q, cltrTmp)
         else:
-            resultTmp = searcher.searc_with_collector(q, cltrTmp)
-
+            cltrTmp = searcher.collector(limit=10)
+            cltrTmp.prepare(searcher, q, searcher.boolean_context())
+            resultTmp = searcher.search_with_collector(q, cltrTmp)
         result = cltrTmp.results()
+
     elif cfg['FUZZY_MODEL']:
         prs.add_plugin(qparser.FuzzyTermPlugin())
         if cfg['SORT_BY_DATE']:
-            result = searcher.search(q, sortedby='publish_date')
+            result = searcher.search(q, sortedby="publish_date")
         else:
             result = searcher.search(q)
-    else:
-        pass
+
+    elif cfg['PROBABILISTIC_MODEL']:
+        if cfg['SORT_BY_DATE']:
+            result = searcher.search(q, sortedby="publish_date")
+        else:
+            result = searcher.search(q)
+
+    elif cfg['VECTOR_MODEL']:
+        if cfg['SORT_BY_DATE']:
+            result = searcher.search(q, sortedby="publish_date")
+        else:
+            result = searcher.search(q)
 
     return result
 
