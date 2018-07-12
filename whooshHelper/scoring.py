@@ -122,8 +122,8 @@ class Cosine(Weighting):
         idf = searcher.idf(fieldnum, text)
 
         DTW = (1.0 + log(weight)) * idf
-        QMF = 1.0  # TODO: Fix this
-        QTW = ((0.5 + (0.5 * QTF / QMF))) * idf
+        QMF = 1.0
+        QTW = (0.5 + (0.5 * QTF / QMF)) * idf
         return DTW * QTW
 
 

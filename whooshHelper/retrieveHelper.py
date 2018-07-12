@@ -16,7 +16,10 @@ def retrieve_docs(index):
 
     try:
         log.print_log(TAG, 'creating searcher')
-        src = index.searcher()
+        if irCfg['VECTOR_MODEL']:
+            src = index.searcher(weighting=scoring.Cosine())
+        else:
+            src = index.searcher()
 
         goOn = True
         while goOn:
@@ -112,7 +115,6 @@ def set_model_and_search(prs, searcher, cfg, q):
     elif cfg['VECTOR_MODEL']:
         if cfg['SORT_BY_DATE']:
             result = searcher.search(q, sortedby="publish_date")
-            w = scoring.Cosine()
             for r in result:
                 w.score(searcher, 21, r['content'], r['pmid'], 1)
         else:
