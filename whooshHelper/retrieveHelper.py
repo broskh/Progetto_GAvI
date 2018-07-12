@@ -115,8 +115,6 @@ def set_model_and_search(prs, searcher, cfg, q):
     elif cfg['VECTOR_MODEL']:
         if cfg['SORT_BY_DATE']:
             result = searcher.search(q, sortedby="publish_date")
-            for r in result:
-                w.score(searcher, 21, r['content'], r['pmid'], 1)
         else:
             result = searcher.search(q)
 
