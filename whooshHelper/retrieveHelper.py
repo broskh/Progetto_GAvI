@@ -1,9 +1,13 @@
 import os
 
-from whoosh import qparser, scoring
+from whoosh import qparser
+from whoosh.highlight import UppercaseFormatter
 from whoosh.qparser import QueryParser
 
 from util import *
+from . import scoring
+
+TAG = "[rh - retrieve_docs]"
 
 
 def retrieve_docs(index):
@@ -11,39 +15,49 @@ def retrieve_docs(index):
     irCfg = config.get_config()
 
     try:
-        print('[retrieve_docs] creating searcher')
+        log.print_log(TAG, 'creating searcher')
         src = index.searcher()
 
         goOn = True
         while goOn:
             query = input('Enter query text: ')
             parser = QueryParser('content', schema=index.schema)
-            print('[retrieve_docs] parser created')
+            log.print_log(TAG, 'parser created')
             simplify_parser(parser)
-            print('[retrieve_docs] parser simplified')
-            print('[retrieve_docs] creating queryObject')
+            log.print_log(TAG, 'parser simplified')
+            log.print_log(TAG, 'creating queryObject')
             p_query = parser.parse(query)
 
-            print('[retrieve_docs] correcting query if needed')
+            log.print_log(TAG, 'correcting query if needed')
             corrected = src.correct_query(p_query, query)
             if corrected.query != p_query:
                 print("Showing results for: ", corrected.string)
                 p_query = corrected.query
 
-            print('[retrieve_docs] searching')
+            log.print_log(TAG, 'searching')
             results = set_model_and_search(parser, src, irCfg, p_query)
+            results.formatter = UppercaseFormatter()
 
             for r in results:
-                print(r['title'])  # , '-', r['publish_date'])
-                print('\t', end='')
+                if 'publish_date' in r.keys():
+                    print(r['title'], '-', r['publish_date'])
+                else:
+                    print(r['title'], '- no date')
+
+                print('\n\t', end='')
                 i = 0
                 for char in r.highlights("content"):
                     print(char, end='')
                     i = i + 1
-                    if i%128 == 0:
+                    if i % 128 == 0:
                         print()
                         print('\t', end='')
-                print()
+                print('\n')
+
+                for j in range(128):
+                    print('-', end='')
+                    j += j+1
+                print('\n')
 
             print('Found ', results.estimated_length(), ' matching documents')
             print()
@@ -92,11 +106,15 @@ def set_model_and_search(prs, searcher, cfg, q):
         if cfg['SORT_BY_DATE']:
             result = searcher.search(q, sortedby="publish_date")
         else:
-            result = searcher.search(q)
+            w = scoring.BM25F(B=0.75, K1=1.5)
+            result = searcher.search(q, scored=True)
 
     elif cfg['VECTOR_MODEL']:
         if cfg['SORT_BY_DATE']:
             result = searcher.search(q, sortedby="publish_date")
+            w = scoring.Cosine()
+            for r in result:
+                w.score(searcher, 21, r['content'], r['pmid'], 1)
         else:
             result = searcher.search(q)
 

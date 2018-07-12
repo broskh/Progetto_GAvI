@@ -19,6 +19,7 @@ DEFAULT_INDEXING_MULTISEGMENT = False
 DEFAULT_BOOLEAN = True
 DEFAULT_FUZZY = False
 DEFAULT_PROBABILISTIC = False
+DEFAULT_VECTOR = False
 DEFAULT_SORT_BY_DATE = False
 
 CONFIG_FILE = "config.json"
@@ -50,6 +51,7 @@ def read_config():
         config['BOOLEAN_MODEL'] = DEFAULT_BOOLEAN
         config['FUZZY_MODEL'] = DEFAULT_FUZZY
         config['PROBABILISTIC_MODEL'] = DEFAULT_PROBABILISTIC
+        config['VECTOR_MODEL'] = DEFAULT_VECTOR
         config['SORT_BY_DATE'] = DEFAULT_SORT_BY_DATE
 
         json_file = open(CONFIG_FILE, 'w')
