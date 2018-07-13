@@ -37,7 +37,7 @@ def standard_recall_levels(positions_relevants_in_answer, n_relevants):
         rec_lev = (j+1)/10
         while recall_points[k]['recall'] < rec_lev:
             k = k + 1
-            if k < len(recall_points):
+            if k <= len(recall_points):
                 recall_points.append({'recall': 1, 'precision': 0})
         standard_recall.append({'recall': rec_lev, 'precision': recall_points[k]['precision']})
     return standard_recall
@@ -102,16 +102,12 @@ def get_answers(queries):
             log.print_log(TAG, 'searching')
             results = retrieveHelper.set_model_and_search(parser, src, irCfg, p_query)
 
-            i = 1
             for r in results:
                 if q['id'] not in answers:
-                    supp = [{r['pmid']: i}]
-                    i = i+1
+                    supp = r['pmid']
                     answers[q['id']] = supp
                 else:
-                    supp = [{r['pmid']: i}]
-
-                    i = i + 1
+                    supp = r['pmid']
                     answers[q['id']].append(supp)
     else:
         log.print_console("ERROR", "Index a collection of documents first")
