@@ -15,29 +15,12 @@ def retrieve_docs(index):
     irCfg = config.get_config()
 
     try:
-        log.print_log(TAG, 'creating searcher')
-        if irCfg['VECTOR_MODEL']:
-            src = index.searcher(weighting=scoring.Cosine())
-        else:
-            src = index.searcher()
+        src = create_searcher(index, irCfg)
 
         goOn = True
         while goOn:
-            query = input('Enter query text: ')
-            parser = QueryParser('content', schema=index.schema)
-            log.print_log(TAG, 'parser created')
-            simplify_parser(parser)
-            log.print_log(TAG, 'parser simplified')
-            log.print_log(TAG, 'creating queryObject')
-            p_query = parser.parse(query)
-
-            log.print_log(TAG, 'correcting query if needed')
-            corrected = src.correct_query(p_query, query)
-            if corrected.query != p_query:
-                print("Showing results for: ", corrected.string)
-                p_query = corrected.query
-
             log.print_log(TAG, 'searching')
+            parser, p_query = create_query(index, src, False)
             results = set_model_and_search(parser, src, irCfg, p_query)
             results.formatter = UppercaseFormatter()
 
@@ -109,8 +92,7 @@ def set_model_and_search(prs, searcher, cfg, q):
         if cfg['SORT_BY_DATE']:
             result = searcher.search(q, sortedby="publish_date")
         else:
-            w = scoring.BM25F(B=0.75, K1=1.5)
-            result = searcher.search(q, scored=True)
+            result = searcher.search(q)
 
     elif cfg['VECTOR_MODEL']:
         if cfg['SORT_BY_DATE']:
@@ -120,6 +102,44 @@ def set_model_and_search(prs, searcher, cfg, q):
 
     return result
 
+
+def create_searcher(index, cfg):
+    log.print_log(TAG, 'creating searcher')
+    if cfg['VECTOR_MODEL']:
+        src = index.searcher(weighting=scoring.Cosine())
+    elif cfg['PROBABILISTIC_MODEL']:
+        src = index.searcher(weighting=scoring.BM25F())
+    else:
+        src = index.searcher()
+
+    return src
+
+
+def create_query(index, src, evaluation, q=""):
+
+    if not evaluation:
+        query = input('Enter query text: ')
+        parser = QueryParser('content', schema=index.schema)
+        log.print_log(TAG, 'parser created')
+        simplify_parser(parser)
+        log.print_log(TAG, 'parser simplified')
+        log.print_log(TAG, 'creating queryObject')
+        p_query = parser.parse(query)
+
+        log.print_log(TAG, 'correcting query if needed')
+        corrected = src.correct_query(p_query, query)
+        if corrected.query != p_query:
+            print("Showing results for: ", corrected.string)
+            p_query = corrected.query
+    else:
+        parser = QueryParser('content', schema=index.schema)
+        log.print_log(TAG, 'parser created')
+        simplify_parser(parser)
+        log.print_log(TAG, 'parser simplified')
+        log.print_log(TAG, 'creating queryObject')
+        p_query = parser.parse(q)
+
+    return parser, p_query
 
 def clear_terminal():
     if os.name == 'nt':

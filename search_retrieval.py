@@ -55,7 +55,8 @@ def main():
         elif value == '4':
             conf = config_menu()
         elif value == '5':
-            evaluation.run_evaluation()
+            precision, recall, std_recall = evaluation.run_evaluation()
+            print('Precision, Recall and std Recall values: ', precision, ', ', recall, ', ', std_recall)
         elif value == '6':
             end = True
         else:

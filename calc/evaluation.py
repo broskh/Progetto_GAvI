@@ -1,8 +1,17 @@
 import os
 import xml.etree.ElementTree as ElementTree
 
-from util import *
+from whoosh.index import open_dir
+from whoosh import qparser
+from whoosh.highlight import UppercaseFormatter
+from whoosh.qparser import QueryParser
 
+from util import *
+from whooshHelper import *
+
+
+
+TAG = "[evaluation]"
 
 def precision(n_relevants_in_answer, n_answer):
     return n_relevants_in_answer/n_answer
@@ -12,6 +21,8 @@ def recall(n_relevants_in_answer, n_relevants):
     return n_relevants_in_answer/n_relevants
 
 
+# param: lista di posizioni dei doc rilevanti in risposta, n doc rilevanti
+# return: lista di dict {livellorecall, precision}
 def standard_recall_levels(positions_relevants_in_answer, n_relevants):
     recall_points = []
     i = 1
@@ -31,7 +42,7 @@ def standard_recall_levels(positions_relevants_in_answer, n_relevants):
         standard_recall.append({'recall': rec_lev, 'precision': recall_points[k]['precision']})
     return standard_recall
 
-
+# legge file query set e ritorna una lista di dict{id:int, testo:string}
 def get_queries():
     queries = []
     conf = config.get_config()
@@ -54,7 +65,7 @@ def get_queries():
                     queries.append(query)
     return queries
 
-
+#ritorna un dict{idQuery:listaPmidDocRilevantiQuery}
 def get_relevants():
     relevants = {}
     conf = config.get_config()
@@ -74,12 +85,69 @@ def get_relevants():
                             relevants[qrel[0]].append(str(qrel[2]))
     return relevants
 
+# param: querySet lista di dict{id: int, title: string}
+# ritorna un dict{idQuery:lista di dict{PmidDocInRisposta:posizione}}
+def get_answers(queries):
+    answers = {}
+    if os.path.exists(indexing_helper.INDEX_FOLDER_NAME):
+        index = open_dir(indexing_helper.INDEX_FOLDER_NAME)
 
-# def get_relevants_in_answers(answer, relevants):
-#
-#
-# def get_answers(topics, searcher):
-#
-#
-# def run_evaluation():
-#     return precision, recall, standard_levels_recall
+        irCfg = config.get_config()
+
+        src = retrieveHelper.create_searcher(index, irCfg)
+
+        for q in queries:
+            parser, p_query = retrieveHelper.create_query(index, src, True, q['title'])
+
+            log.print_log(TAG, 'searching')
+            results = retrieveHelper.set_model_and_search(parser, src, irCfg, p_query)
+
+            i = 1
+            for r in results:
+                if q['id'] not in answers:
+                    supp = [{r['pmid']: i}]
+                    i = i+1
+                    answers[q['id']] = supp
+                else:
+                    supp = [{r['pmid']: i}]
+
+                    i = i + 1
+                    answers[q['id']].append(supp)
+    else:
+        log.print_console("ERROR", "Index a collection of documents first")
+
+    return answers
+
+# param: answer=dict{idQuery:int, listaPmidDocInRisposta:lista di int}, relevants=dict{idQuery:listaPmidDocRilevantiQuery}
+# return: dict{idQuery:listaPmidDocInRisposta}
+def get_relevants_in_answers(answers, relevants):
+    rel_in_answers = {}
+    for r, a in zip(relevants, answers):
+        for idr in relevants[r]:
+            for ida in answers[a]:
+                if idr == ida:
+                    if r not in rel_in_answers:
+                        rel_in_answers[str(relevants[r])] = idr
+                    else:
+                        rel_in_answers[str(relevants[r])].append(idr)
+    return rel_in_answers
+
+
+def run_evaluation():
+    query_set = get_queries()
+
+    answers = get_answers(query_set)
+    n_answers = len(answers)
+
+    relevants = get_relevants()
+    n_relevants = len(relevants)
+
+    rel_in_ans = get_relevants_in_answers(answers, relevants)
+    n_rel_in_ans = len(rel_in_ans)
+
+    pos_rel_in_ans = []
+    for id in rel_in_ans:
+        for doc in rel_in_ans[id]:
+            pos_rel_in_ans.append(answers[id[doc]])
+
+    return precision(n_rel_in_ans, n_answers), recall(n_rel_in_ans, n_relevants), standard_recall_levels(pos_rel_in_ans, n_relevants)
