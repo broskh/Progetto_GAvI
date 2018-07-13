@@ -42,7 +42,7 @@ def standard_recall_levels(positions_relevants_in_answer, n_relevants):
         standard_recall.append({'recall': rec_lev, 'precision': recall_points[k]['precision']})
     return standard_recall
 
-# legge file query set e ritorna una lista di dict{id:int, testo:string}
+# legge file query set e ritorna una lista di dict{id:testo}
 def get_queries():
     queries = []
     conf = config.get_config()
@@ -102,30 +102,40 @@ def get_answers(queries):
             log.print_log(TAG, 'searching')
             results = retrieveHelper.set_model_and_search(parser, src, irCfg, p_query)
 
-            for r in results:
-                if q['id'] not in answers:
-                    supp = r['pmid']
-                    answers[q['id']] = supp
-                else:
-                    supp = r['pmid']
-                    answers[q['id']].append(supp)
+            if results:
+                for r in results:
+                    if q['id'] not in answers:
+                        supp = [r['pmid']]
+                        answers[q['id']] = supp
+                    else:
+                        supp = r['pmid']
+                        answers[q['id']].append(supp)
+            else:
+                answers[q['id']] = []
     else:
         log.print_console("ERROR", "Index a collection of documents first")
 
     return answers
 
-# param: answer=dict{idQuery:int, listaPmidDocInRisposta:lista di int}, relevants=dict{idQuery:listaPmidDocRilevantiQuery}
-# return: dict{idQuery:listaPmidDocInRisposta}
-def get_relevants_in_answers(answers, relevants):
+# param: answer=dict{idQuery: listaPmidDocInRisposta}, relevants=dict{idQuery:listaPmidDocRilevantiQuery}
+# return: dict{idQuery:lista di posizioni}
+def get_positions_relevants_in_answers(answers, relevants):
     rel_in_answers = {}
-    for r, a in zip(relevants, answers):
-        for idr in relevants[r]:
-            for ida in answers[a]:
-                if idr == ida:
-                    if r not in rel_in_answers:
-                        rel_in_answers[str(relevants[r])] = idr
-                    else:
-                        rel_in_answers[str(relevants[r])].append(idr)
+
+    for r in relevants.keys():
+        if answers[r]:
+            pos = 0
+            for docr in relevants[r]:
+                for doca in answers[r]:
+                    pos = pos + 1
+                    if docr == doca:
+                        if r not in rel_in_answers:
+                            rel_in_answers[r] = [pos]
+                        else:
+                            rel_in_answers[r].append(pos)
+        else:
+            rel_in_answers[r] = []
+
     return rel_in_answers
 
 
@@ -133,19 +143,19 @@ def run_evaluation():
     query_set = get_queries()
 
     answers = get_answers(query_set)
-    n_answers = len(answers)
-
+#    for a in answers:
+#        n_answers = len(answers[a])
+#
     relevants = get_relevants()
-    for r in relevants:
-        n_relevants = len(relevants)
-
-
-    rel_in_ans = get_relevants_in_answers(answers, relevants)
-    n_rel_in_ans = len(rel_in_ans)
-
-    pos_rel_in_ans = []
-    for id in rel_in_ans:
-        for doc in rel_in_ans[id]:
-            pos_rel_in_ans.append(answers[id[doc]])
-
-    return precision(n_rel_in_ans, n_answers), recall(n_rel_in_ans, n_relevants), standard_recall_levels(pos_rel_in_ans, n_relevants)
+#    n_relevants = len(relevants)
+#
+#
+    rel_in_ans = get_positions_relevants_in_answers(answers, relevants)
+#    n_rel_in_ans = len(rel_in_ans)
+#
+#    pos_rel_in_ans = []
+#    for id in rel_in_ans:
+#        for doc in rel_in_ans[id]:
+#            pos_rel_in_ans.append(answers[id[doc]])
+#
+    return # precision(n_rel_in_ans, n_answers), recall(n_rel_in_ans, n_relevants), standard_recall_levels(pos_rel_in_ans, n_relevants)
