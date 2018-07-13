@@ -86,7 +86,7 @@ def get_relevants():
     return relevants
 
 # param: querySet lista di dict{id: int, title: string}
-# ritorna un dict{idQuery:lista di dict{PmidDocInRisposta:posizione}}
+# ritorna un dict{idQuery:lista di PmidDocInRisposta}
 def get_answers(queries):
     answers = {}
     if os.path.exists(indexing_helper.INDEX_FOLDER_NAME):
@@ -136,7 +136,9 @@ def run_evaluation():
     n_answers = len(answers)
 
     relevants = get_relevants()
-    n_relevants = len(relevants)
+    for r in relevants:
+        n_relevants = len(relevants)
+
 
     rel_in_ans = get_relevants_in_answers(answers, relevants)
     n_rel_in_ans = len(rel_in_ans)
