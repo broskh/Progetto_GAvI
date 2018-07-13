@@ -8,6 +8,7 @@ import time
 
 from util import *
 from whooshHelper import *
+from calc import *
 
 from whoosh.index import open_dir
 
@@ -26,7 +27,7 @@ def main():
     log.print_log("-------", "-------")
     log.print_log("START", "")
     menu = ['Index documents', 'Run query', 'Remove indexed documents',
-            'Settings', 'Quit']
+            'Settings', 'Evaluation', 'Quit']
     i = 1
     end = False
     while not end:
@@ -54,6 +55,8 @@ def main():
         elif value == '4':
             conf = config_menu()
         elif value == '5':
+            evaluation.run_evaluation()
+        elif value == '6':
             end = True
         else:
             log.print_console("ERROR", "Opzione scelta non valida")
