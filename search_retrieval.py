@@ -55,8 +55,24 @@ def main():
         elif value == '4':
             conf = config_menu()
         elif value == '5':
-            precision, recall, std_recall = evaluation.run_evaluation()
-            print('Precision, Recall and std Recall values: ', precision, ', ', recall, ', ', std_recall)
+            if os.path.exists(indexing_helper.INDEX_FOLDER_NAME):
+                index = open_dir(indexing_helper.INDEX_FOLDER_NAME)
+                precision, recall, std_recall = evaluation.run_evaluation(index)
+                print('Precision: ', precision*100, '%')
+                print('Recall: ', recall*100, '%')
+                print('Recall a livelli standard: ')
+                keys = list(std_recall.keys())
+                keys.sort()
+                for key in keys:
+                    try:
+                        float(std_recall[key])
+                        lev_prec = std_recall[key]*100
+                    except ValueError:
+                        lev_prec = std_recall[key]
+                    print('\t', key, ':\t', lev_prec, '%')
+            else:
+                log.print_console("ERROR", "Index a collection of documents first")
+            input("The index has been removed. Press Enter to continue")
         elif value == '6':
             end = True
         else:
