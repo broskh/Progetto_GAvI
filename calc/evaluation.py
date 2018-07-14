@@ -120,8 +120,8 @@ def get_positions_relevants_in_answers(answers, relevants):
     for r in relevants.keys():
         rel_in_answers[r] = []
         if answers[r]:
-            pos = 0
             for docr in relevants[r]:
+                pos = 0
                 for doca in answers[r]:
                     pos = pos + 1
                     if docr == doca:

@@ -1,11 +1,11 @@
 import os
 
-from whoosh import qparser
+from whoosh import qparser, scoring
 from whoosh.highlight import UppercaseFormatter
 from whoosh.qparser import QueryParser
 
 from util import *
-from . import scoring
+# from . import scoring
 
 TAG = "[rh - retrieve_docs]"
 
@@ -106,7 +106,7 @@ def set_model_and_search(prs, searcher, cfg, q):
 def create_searcher(index, cfg):
     log.print_log(TAG, 'creating searcher')
     if cfg['VECTOR_MODEL']:
-        src = index.searcher(weighting=scoring.Cosine())
+        src = index.searcher(weighting=scoring.TF_IDF())
     elif cfg['PROBABILISTIC_MODEL']:
         src = index.searcher(weighting=scoring.BM25F())
     else:

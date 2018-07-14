@@ -18,7 +18,6 @@ TAG = "MAIN"
 def main():
     manage_arguments()
     conf = config.get_config()
-    # irConf = irConfig.get_ir_config()
     log.set_log_file(conf['LOG_FILE'])
     if conf['DEBUG']:
         log.enable_debug()
@@ -53,10 +52,20 @@ def main():
             shutil.rmtree(indexing_helper.INDEX_FOLDER_NAME, ignore_errors=True)
             input("The index has been removed. Press Enter to continue")
         elif value == '4':
-            conf = config_menu()
+            conf_menu = config_menu()
         elif value == '5':
             if os.path.exists(indexing_helper.INDEX_FOLDER_NAME):
                 index = open_dir(indexing_helper.INDEX_FOLDER_NAME)
+                clear_terminal()
+                cfg_mod = config.get_config()
+                if cfg_mod['BOOLEAN_MODEL']:
+                    print("Computing Precision, Recall and Standard levels Recall using Boolean Model...")
+                elif cfg_mod['FUZZY_MODEL']:
+                    print("Computing Precision, Recall and Standard levels Recall using Fuzzy Model...")
+                elif cfg_mod['PROBABILISTIC_MODEL']:
+                    print("Computing Precision, Recall and Standard levels Recall using Probabilistic Model...")
+                elif cfg_mod['VECTOR_MODEL']:
+                    print("Computing Precision, Recall and Standard levels Recall using Vector Space Model...")
                 precision, recall, std_recall = evaluation.run_evaluation(index)
                 print('Precision: ', precision*100, '%')
                 print('Recall: ', recall*100, '%')
@@ -70,9 +79,10 @@ def main():
                     except ValueError:
                         lev_prec = std_recall[key]
                     print('\t', key, ':\t', lev_prec, '%')
+
             else:
                 log.print_console("ERROR", "Index a collection of documents first")
-            input("The index has been removed. Press Enter to continue")
+            input("Press Enter to continue")
         elif value == '6':
             end = True
         else:
@@ -331,11 +341,6 @@ def config_menu():
                 val = input("Choose an IR Model: ")
 
                 if val == '1':
-                    if temp_config['BOOLEAN_MODEL']:
-                        old_value = "Yes"
-                    else:
-                        old_value = "No"
-
                     temp_config['BOOLEAN_MODEL'] = True
                     temp_config['FUZZY_MODEL'] = False
                     temp_config['PROBABILISTIC_MODEL'] = False
@@ -344,11 +349,6 @@ def config_menu():
                     print("BOOLEAN MODEL Enabled.")
 
                 elif val == '2':
-                    if temp_config['FUZZY_MODEL']:
-                        old_value = "Yes"
-                    else:
-                        old_value = "No"
-
                     temp_config['BOOLEAN_MODEL'] = False
                     temp_config['FUZZY_MODEL'] = True
                     temp_config['PROBABILISTIC_MODEL'] = False
@@ -357,10 +357,6 @@ def config_menu():
                     print("FUZZY MODEL Enabled.")
 
                 elif val == '3':
-                    if temp_config['PROBABILISTIC_MODEL']:
-                        old_value = "Yes"
-                    else:
-                        old_value = "No"
                     temp_config['BOOLEAN_MODEL'] = False
                     temp_config['FUZZY_MODEL'] = False
                     temp_config['PROBABILISTIC_MODEL'] = True
@@ -368,10 +364,6 @@ def config_menu():
                     clear_terminal()
                     print("PROBABILISTIC MODEL Enabled.")
                 elif val == '4':
-                    if temp_config['VECTOR_MODEL']:
-                        old_value = "Yes"
-                    else:
-                        old_value = "No"
                     temp_config['BOOLEAN_MODEL'] = False
                     temp_config['FUZZY_MODEL'] = False
                     temp_config['PROBABILISTIC_MODEL'] = False
