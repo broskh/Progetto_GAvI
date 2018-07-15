@@ -30,17 +30,10 @@ def retrieve_docs(index):
                 else:
                     print(r['title'], '- no date')
 
-                print('\n\t', end='')
-                i = 0
-                for char in r.highlights("content"):
-                    print(char, end='')
-                    i = i + 1
-                    if i % 128 == 0:
-                        print()
-                        print('\t', end='')
-                print('\n')
+                print(r['content'])
+                print()
 
-                for j in range(128):
+                for j in range(3):
                     print('-', end='')
                     j += j+1
                 print('\n')
@@ -69,6 +62,7 @@ def simplify_parser(prs):
 
 def set_model_and_search(prs, searcher, cfg, q):
 
+    print("Searching...")
     if cfg['BOOLEAN_MODEL']:
         cltrTmp = 0
         if cfg['SORT_BY_DATE']:
@@ -105,6 +99,7 @@ def set_model_and_search(prs, searcher, cfg, q):
 
 def create_searcher(index, cfg):
     log.print_log(TAG, 'creating searcher')
+    print("Creating Searcher...")
     if cfg['VECTOR_MODEL']:
         src = index.searcher(weighting=scoring.TF_IDF())
     elif cfg['PROBABILISTIC_MODEL']:
@@ -126,11 +121,23 @@ def create_query(index, src, evaluation, q=""):
         log.print_log(TAG, 'creating queryObject')
         p_query = parser.parse(query)
 
-        log.print_log(TAG, 'correcting query if needed')
-        corrected = src.correct_query(p_query, query)
-        if corrected.query != p_query:
-            print("Showing results for: ", corrected.string)
-            p_query = corrected.query
+        while True:
+            log.print_log(TAG, 'correcting query if needed')
+            corrected = src.correct_query(p_query, query)
+            if corrected.query != p_query:
+                print("Did you mean: \"", corrected.string, "\"? (YES/No): ", end="")
+                user_choice = input()
+                if user_choice == "" or user_choice == "Yes" or user_choice == "yes" or user_choice == "Y" or user_choice == "y":
+                    print("Showing results for: ", corrected.string)
+                    p_query = corrected.query
+                    break
+                elif user_choice == "No" or user_choice == "no" or user_choice == "N" or user_choice == "n":
+                    print("Showing results for: ", p_query)
+                    break
+                else:
+                    input("Invalid value. Press Enter to continue")
+            else:
+                break
     else:
         parser = QueryParser('content', schema=index.schema)
         log.print_log(TAG, 'parser created')
@@ -140,6 +147,7 @@ def create_query(index, src, evaluation, q=""):
         p_query = parser.parse(q)
 
     return parser, p_query
+
 
 def clear_terminal():
     if os.name == 'nt':

@@ -313,7 +313,6 @@ def config_menu():
                 old_value = "Yes"
             else:
                 old_value = "No"
-                # cafVal = True
             while True:
                 print("[Current value: '" + old_value + "']")
                 print("[Accepted Values: 'Yes' or 'No']")
