@@ -26,10 +26,11 @@ def retrieve_docs(index):
 
             for r in results:
                 if 'publish_date' in r.keys():
-                    print(r['title'], '-', r['publish_date'])
+                    print(r['title'], '-', r['publish_date'].strftime('%Y-%m-%d'))
                 else:
                     print(r['title'], '- no date')
 
+                print()
                 print(r['content'])
                 print()
 
