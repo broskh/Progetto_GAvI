@@ -48,8 +48,9 @@ def main():
             else:
                 log.print_console("ERROR", "Index a collection of documents first")
         elif value == '3':
-            log.print_console(TAG, "Rimozione dell'indice in corso")
+            print("Rimozione dell'indice in corso...")
             shutil.rmtree(indexing_helper.INDEX_FOLDER_NAME, ignore_errors=True)
+            clear_terminal()
             input("The index has been removed. Press Enter to continue")
         elif value == '4':
             conf_menu = config_menu()
