@@ -14,10 +14,12 @@ You need python3 interpreter (usually already installed, but just in case):
 ```
 apt-get install python3
 ```
-and you only need the python3-whoosh package installed
+and you only need to install the python3-whoosh package:
 ```
 apt-get install python3-whoosh
 ```
+## More Info
+See the presentation slides.
 
 ## Authors
 
