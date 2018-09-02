@@ -19,6 +19,7 @@ and you only need to install the python3-whoosh package:
 apt-get install python3-whoosh
 ```
 ## More Info
+Tested on Linux Mint .
 See the presentation slides.
 
 ## Authors

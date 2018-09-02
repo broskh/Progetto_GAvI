@@ -19,8 +19,10 @@ def retrieve_docs(index):
 
         goOn = True
         while goOn:
-            log.print_log(TAG, 'searching')
+
             parser, p_query = create_query(index, src, False)
+            print("Searching...")           
+            log.print_log(TAG, 'searching')
             results = set_model_and_search(parser, src, irCfg, p_query)
             results.formatter = UppercaseFormatter()
 
@@ -63,7 +65,6 @@ def simplify_parser(prs):
 
 def set_model_and_search(prs, searcher, cfg, q):
 
-    print("Searching...")
     if cfg['BOOLEAN_MODEL']:
         cltrTmp = 0
         if cfg['SORT_BY_DATE']:

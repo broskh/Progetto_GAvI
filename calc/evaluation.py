@@ -102,11 +102,17 @@ def get_answers(index, queries):
         if results:
             for r in results:
                 if q['id'] not in answers:
-                    supp = [r['pmid']]
+                    if 'pmid' in r:
+                        supp = [r['pmid']]
+                    else:
+                        supp = [-1]
                     answers[q['id']] = supp
                 else:
-                    supp = r['pmid']
-                    answers[q['id']].append(supp)
+                    if 'pmid' in r:
+                        supp = [r['pmid']]
+                    else:
+                        supp = [-1]
+                    answers[q['id']] = supp
         else:
             answers[q['id']] = []
     return answers
