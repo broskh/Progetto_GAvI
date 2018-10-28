@@ -11,10 +11,8 @@ Indexing is completely automatic.
 ### Querying
 The query is analyzed and the application can provide a correction.
 ![PubMed Search Retrieval - Quering 1](https://imgur.com/tO9PNHC.png)
-<br>
 Result snippets are displayed.
 ![PubMed Search Retrieval - Quering 2](https://imgur.com/mgw14gN.png)
-<br>
 At the end the application asks if the user want to insert another query.
 ![PubMed Search Retrieval - Quering 3](https://imgur.com/yXsRMHK.png)
 ### Index removing
