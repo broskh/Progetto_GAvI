@@ -1,4 +1,4 @@
-# PubMed-Search-Retrieval
+# PubMed Search Retrieval
 ## Introduction
 Software for indexing and searching PubMed documents.
 ## Description
